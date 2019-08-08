@@ -11,6 +11,3 @@ We are using PostgreSQL. The first part of [this article](https://blog.logrocket
 For now the migrations are run manually. Later on we may use a tool to manage migrations for us. The migrations need to be run once and in order. The migrations should be written so that if they run more than once, there is no additional change. For example, CREATE TABLE tableName commands are written CREATE TABLE IF NOT EXISTS tableName. File names should have the following structure **xxxfileName.sql**.
 
 To run a migration, connect to the intended database and run **\i xxxfileName.sql;**.
-
-## ToDo
-The passwrod_hash datatype needs to be changed to support hashing.
