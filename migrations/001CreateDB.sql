@@ -4,36 +4,41 @@ CREATE TABLE IF NOT EXISTS user (
 	first_name varchar(20),
 	last_name varchar(20),
 	email varchar(255) NOT NULL UNIQUE,
-	password_hash varchar(60) NOT NULL
+	password_hash varchar(60) NOT NULL,
 );
 
-CREATE TABLE IF NOT EXISTS conversation (
+CREATE TABLE IF NOT EXISTS convo (
 	convo_id serial PRIMARY KEY,
 	title varchar(150),
-	votes integer,
-	post_count integer NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS convo_tally (
-	convo_id integer REFERENCES conversations (convo_id) PRIMARY KEY,
 	contributors integer NOT NULL,
 	posts integer NOT NULL,
+	views integer,
 	votes integer,
-	comment integer
+	comments integer,
+	last_post_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS post (
 	post_id serial PRIMARY KEY,
+	convo_id integer REFERENCES convo (convo_id) NOT NULL,
 	post text NOT NULL,
-	contributor integer REFERENCES users (user_id) NOT NULL,
-	convo_id integer REFERENCES conversations (convo_id) NOT NULL,
-	post_order integer NOT NULL
+	contributor integer REFERENCES user (user_id) NOT NULL,
+	created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS contributors (
-	convo_id REFERENCES conversations (convo_id) NOT NULL,
+CREATE TABLE IF NOT EXISTS contributor (
+	convo_id REFERENCES convo (convo_id) NOT NULL,
 	contributor_id REFERENCES users (user_id) NOT NULL,
-	accepted BOOLEAN,
+	inviter_id REFERENCES user (user_id) NOT NULL,
+	invited_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	accepted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
 	
 	CONSTRAINT contributor_key PRIMARY KEY(convo_id, contributor_id)
+);
+
+CREATE TABLE IF NOT EXISTS comment (
+	comment_id serial PRIMARY KEY,
+	convo_id integer REFERENCES convo (convo_id),
+	prev_id integer REFERENCES comment (comment_id) DEFAULT NULL, 
+	comment_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
