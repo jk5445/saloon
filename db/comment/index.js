@@ -14,7 +14,7 @@ modules.exports = app => {
 
     //comment as reply to prev comment
     //auth
-    app.put('/api/comment/:comment_id', (request, response) => {
+    app.post('/api/comment/:convo_id/:comment_id', (request, response) => {
         //TODO: implement method
     });
 
