@@ -2,18 +2,18 @@
 
 modules.exports = app => {
     //get contributors
-    app.get('/api/contributors/:convo_id', (request, response) => {
+    app.get('/api/contributor/:convo_id', (request, response) => {
         //TODO: implement method
     });
 
     //invite contributor
     //auth
-    app.post('/api/contributors/:convo_id/:invite', (request, response) => {
+    app.post('/api/contributor/:convo_id/:invite', (request, response) => {
         //TODO: implement method
     });
 
     //accept invite
-    app.put('/api/contributos/:convo_id', (request, response) => {
+    app.put('/api/contributo/:convo_id', (request, response) => {
         //TODO: implement method
     });
 }
