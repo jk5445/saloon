@@ -15,7 +15,7 @@ modules.exports = app => {
 
     //vote on conversation
     //auth
-    app.put('/api/convo/vote/:convo_id', (request, response) => {
+    app.put('/api/convo/vote/:convo_id/:vote', (request, response) => {
         //TODO: implement method
     });
 }

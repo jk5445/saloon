@@ -21,7 +21,7 @@ post */api/convo*
 #### Get conversation
 get */api/convo/:convo_ID*
 #### Vote on conversation
-put */api/convo/vote/:convo_ID*
+put */api/convo/vote/:convo_ID/:vote*
 - requires authentication
 
 ## Posts 
@@ -35,25 +35,25 @@ get */api/post/:convo_ID/:postNumber*
 
 ## Contributors
 #### Get contributors
-get */api/contributors/:convo_ID'*
+get */api/contributor/:convo_ID'*
 #### Invite contributor
-post */api/contributors/:convo_ID/:invite*
+post */api/contributor/:convo_ID/:invite*
 - requires authentication
 #### Accept invite
-put */api/contributos/:convo_ID'*
+put */api/contributo/:convo_ID'*
 - requires authentication
 
 ## Comments
 #### Get comments
-get */api/comments/:convo_ID'*
+get */api/comment/:convo_ID'*
 #### Make base comment
-post */api/comments/:convo_ID*
+post */api/comment/:convo_ID*
 - requires authentication
 #### Comment as reply to prev comment
-put */api/comments/:comment_ID*
+put */api/comment/:comment_ID*
 - requires authentication
 #### Vote on comment
-put */api/comments/vote/:comment_ID/:vote'*
+put */api/comment/vote/:comment_ID/:vote'*
 - requires authentication
 
 
