@@ -16,7 +16,7 @@ const createPost = (request, response) => {
 	  	if(error) {
 	  		throw error;
 	  	}
-	  	//make sure result comes back as boolean
+	  	//true if record is found
 	  	authorized = (results.rowCount > 0);
 	  }
 	);
