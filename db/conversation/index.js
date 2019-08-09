@@ -9,13 +9,13 @@ modules.exports = app => {
     });
 
     //get conversation
-    app.get('/api/convo/:convo_ID', (request, response) => {
+    app.get('/api/convo/:convo_id', (request, response) => {
         //TODO: implement method
     });
 
     //vote on conversation
     //auth
-    app.put('/api/convo/vote/:convo_ID', (request, response) => {
+    app.put('/api/convo/vote/:convo_id', (request, response) => {
         //TODO: implement method
     });
 }

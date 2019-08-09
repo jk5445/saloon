@@ -10,7 +10,7 @@ modules.exports = app => {
     });
 
     //get post
-    app.get('/api/post/:convo_ID/:postNumber', (request, response) => {
+    app.get('/api/post/:convo_id/:postNumber', (request, response) => {
         //TODO: implement method
     });
 }
