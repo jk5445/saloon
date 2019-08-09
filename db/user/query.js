@@ -1,4 +1,4 @@
-const db = require('../server/queries');
+const db = require('../queries');
 const bcrypt = require('bcrypt');
 
 const createUser = (request, response) => {

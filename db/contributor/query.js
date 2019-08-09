@@ -1,4 +1,4 @@
-const db = require('../server/queries');
+const db = require('../queries');
 
 const inviteContributor = (convo_ID, contributor, status, moderator, response) => {
 	db.query(

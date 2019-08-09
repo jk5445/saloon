@@ -1,4 +1,4 @@
-const db = require('../server/queries');
+const db = require('../queries');
 
 //a user needs to be part of a conversation to post
 const createPost = (request, response) => {

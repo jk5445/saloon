@@ -1,4 +1,4 @@
-const db = require('../server/queries');
+const db = require('../queries');
 
 //to create a conversation a user must provide a title, and a post
 //As these requirements are for all conversations, the whole process flows through this method
