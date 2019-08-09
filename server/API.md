@@ -24,14 +24,14 @@ response: (user will get an email to confirm email address before they can get a
 **login**  
 get */api/login*
 
-response Authorization header  
 request body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
 "user_name": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
 "password": "password"  
-}
+}  
+response Authorization header
 
 **account info**
 *not a priority*  
