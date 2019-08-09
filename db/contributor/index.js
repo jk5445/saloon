@@ -13,7 +13,7 @@ modules.exports = app => {
     });
 
     //accept invite
-    app.put('/api/contributo/:convo_id', (request, response) => {
+    app.put('/api/contributor/:convo_id', (request, response) => {
         //TODO: implement method
     });
 }
