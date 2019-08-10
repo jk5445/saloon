@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS convo (
 	convo_id serial PRIMARY KEY,
 	title varchar(150),
-	contributors integer NOT NULL,
+	contributors integer DEFAULT 1,
 	posts integer DEFAULT 0,
 	views integer DEFAULT 0,
 	votes integer DEFAULT 0,
