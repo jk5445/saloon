@@ -135,39 +135,35 @@ get */api/convo/:convo_id*
 response body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"title": "Title",  
+    "title": "Title",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"contributors": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor_1": "contributor",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor_2": "contributor",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-...  
+    "views": "count",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-},  
+    "votes": "count",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"posts": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"post_1": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor": "contributor",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"post": "postText"  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-},  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"post_2": {  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor": "contributor",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"post": "postText"  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-},  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-...  
+    "contributorCount": "count",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-}  
+    "contributors": ["contributor_1", "contributor_2", ...]  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    "postCount": "count",  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    "posts": [  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "contributor": "contributor",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "post": "postText",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "time_of_post": "timestamp"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        },  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ...  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    ],  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    "commentCount": "count",  
 }
 
 **Vote on conversation**  
