@@ -130,7 +130,7 @@ request body
 }
 
 **Get conversation**  
-get */api/convo/:convo_ID*
+get */api/convo/:convo_id*
 
 response body  
 {  
@@ -194,13 +194,13 @@ request body
 
 **Get post**
 *will not implement for now. included in get convo*  
-get */api/post/:convo_ID/:postNumber*
+get */api/post/:convo_id/:postNumber*
 
 ## Contributors
 
 **Get contributors**
 *will not implement for now. included in get convo*  
-get */api/contributor/:convo_ID'*
+get */api/contributor/:convo_id'*
 
 **Invite contributor**  
 post */api/contributor
@@ -269,7 +269,7 @@ request body
 }
 
 **Vote on comment**
-put */api/comment/vote/:comment_ID/:vote'*
+put */api/comment/vote/:comment_id/:vote'*
 
 Request Authorization header  
 :vote is up or down
