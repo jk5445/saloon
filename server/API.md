@@ -1,4 +1,5 @@
-## Users
+## User
+
 **signup**  
 post */api/signup*
 
@@ -111,10 +112,56 @@ request Authorization header
 request body  
 {
 &nbsp;&nbsp;&nbsp;&nbsp;
-"password": "password"
+    "password": "password"
 }
 
-## Conversations
+
+## Feed
+
+All feed responses will have the following response body:  
+{  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    [  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "convo_id":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "title":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "contributors":"a, b, and 24 others",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "views":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "votes":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "comments":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "first_post":"",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "tags": ["tag1", "tag2", ...]  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        },  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ...        
+&nbsp;&nbsp;&nbsp;&nbsp;
+    ]  
+}
+
+
+**Get Feed for homepage**  
+get */api/feed*
+
+**Get Feed by tag**
+*secondary priority*  
+get */api/feed/:tag_id*
+
+**Get Feed by contributor**
+*secondary priority*  
+get */api/feed/:contributor_id*
+
+
+## Conversation
 For now, users can not edit or delete conversations.
 
 **Create conversation**  
