@@ -121,7 +121,7 @@ request body
 All feed responses will have the following response body:  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-    [  
+    "convos": [  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -270,21 +270,25 @@ get */api/comment/:convo_id'*
 response body  //needs thought
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"comment_1": {  
+    "comments": [  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"comment_id": "comment_id",  
+        {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "comment_id": "comment_id",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "user_name": "user",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "comment": "commentText",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "time": "",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "prev_id": "previousCommentId"  //null for base comment  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"user_name": "user",  
+        },  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"comment": "commentText",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"time": "",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"prev_id": "previousCommentId"  //null for base comment  
+        ...  
 &nbsp;&nbsp;&nbsp;&nbsp;
-},  
-&nbsp;&nbsp;&nbsp;&nbsp;
-"comment_2": ...  
+    ]
 }
 
 **Make base comment**  
