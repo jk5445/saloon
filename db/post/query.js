@@ -36,7 +36,7 @@ async function createPost (convo_id, contributor_id, post) {
 }
 
 async function getPosts (convo_id) {
-	posts = [];
+	let posts = [];
 	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1',
 		[convo_id],
 		(error, results) => {
