@@ -3,14 +3,14 @@ const db = require('./query');
 
 modules.exports = app => {
     //get contributors
-    app.get('/apiv1/contributor/:convo_id', (request, response) => {
+    app.get('/api/v1/contributor/:convo_id', (request, response) => {
         //TODO: implement method
         response.end();
     });
 
     //invite contributor
     //auth
-    app.post('/apiv1/contributor', async (request, response) => {
+    app.post('/api/v1/contributor', async (request, response) => {
         const inviter_id = request.body.user_id;
         const contributor_id = request.body.invite;
         const convo_id = request.body.convo_id;
@@ -34,7 +34,7 @@ modules.exports = app => {
     });
 
     //accept invite
-    app.put('/apiv1/contributor/:convo_id', async (request, response) => {
+    app.put('/api/v1/contributor/:convo_id', async (request, response) => {
         const contributor_id = request.body.user_id;
         const convo_id = request.params.convo_id;
 

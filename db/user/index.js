@@ -5,7 +5,7 @@ const db = require('./query');
 modules.exports = app => {
     //signup
     //info in the body
-    app.post('/apiv1/signup', async (request, response) => {
+    app.post('/api/v1/signup', async (request, response) => {
         const user_name = request.body.user_name;
         const first_name = request.body.first_name;
         const last_name = request.body.last_name;
@@ -24,7 +24,7 @@ modules.exports = app => {
 
     //login
     //info in the body
-    app.get('/apiv1/login', async (request, response) => {
+    app.get('/api/v1/login', async (request, response) => {
         const email = request.body.email;
         const password = request.body.password;
 
@@ -44,21 +44,21 @@ modules.exports = app => {
 
     //get user info
     //auth
-    app.get('/apiv1/user', (request, response) => {
+    app.get('/api/v1/user', (request, response) => {
         //TODO: implement method
         response.end();
     });
 
     //edit user
     //auth
-    app.put('/apiv1/user', (request, response) => {
+    app.put('/api/v1/user', (request, response) => {
         //TODO: implement method
         response.end();
     });
 
     //delete user - not necessary
     //auth
-    app.delete('/apiv1/user', (request, response) => {
+    app.delete('/api/v1/user', (request, response) => {
         //TODO: implement method
         response.end();
     });

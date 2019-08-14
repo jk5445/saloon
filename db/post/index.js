@@ -7,7 +7,7 @@ const db = require('./query');
 modules.exports = app => {
     //create post
     //auth
-    app.post('/apiv1/post', async (request, response) => {
+    app.post('/api/v1/post', async (request, response) => {
         const user_id = request.body.user_id;
         const convo_id = request.body.convo_id;
         const post = request.body.post;
@@ -34,7 +34,7 @@ modules.exports = app => {
     //get post
     //secondary priority
     
-    app.get('/apiv1/post/:convo_id/:postNumber', (request, response) => {
+    app.get('/api/v1/post/:convo_id/:postNumber', (request, response) => {
         //TODO: implement method
         response.end();
     });

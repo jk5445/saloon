@@ -6,7 +6,7 @@ const db = require('./query');
 module.exports = app => {
     //create conversation
     //auth
-    app.post('/apiv1/convo', async (request, response) => {
+    app.post('/api/v1/convo', async (request, response) => {
         const title = request.body.title;
         const post = request.body.first_post;
         const user_id = request.body.user_id;
@@ -22,7 +22,7 @@ module.exports = app => {
     });
 
     //get conversation
-    app.get('/apiv1/convo/:convo_id', async (request, response) => {
+    app.get('/api/v1/convo/:convo_id', async (request, response) => {
         const convo_id = request.params.convo_id;
         
         let convo;
@@ -37,7 +37,7 @@ module.exports = app => {
 
     //vote on conversation
     //auth
-    app.put('/apiv1/convo/vote/:convo_id/:vote', (request, response) => {
+    app.put('/api/v1/convo/vote/:convo_id/:vote', (request, response) => {
         //TODO: implement method
         response.end();
     });
