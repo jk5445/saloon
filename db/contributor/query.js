@@ -4,12 +4,13 @@ const user = require('../user/query.js');
 module.exports = {
 	inviteContributor, 
 	acceptInvite, 
-	getContributors
+	getContributors,
+	authorize
 };
 
 async function inviteContributor (convo_id, contributor_id, inviter_id) {
 	db.query(
-		'INSERT INTO contributor (convo_id, contributor_id, inviter_id, ) VALUES ($1, $2, $3)',
+		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, $2, $3)',
 		[convo_id, contributor_id, inviter_id],
 		(error, _results) => {
 	  		if(error){
@@ -22,13 +23,22 @@ async function inviteContributor (convo_id, contributor_id, inviter_id) {
 
 async function acceptInvite (convo_id, contributor_id) {
 	db.query(
-		'UPDATE contributor SET  accepted_at=NOW() WHERE convo_id=$1 AND contributor_id=$2',
+		'UPDATE contributor SET accepted_at = NOW() WHERE convo_id = $1 AND contributor_id = $2',
 		[convo_id, contributor_id],
 		(error, _results) => {
 	  		if(error){
 	  			throw error;
-			  }
-			  return;
+			}
+			db.query(
+				'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1',
+				[convo_id],
+				(error, _results) => {
+					if(error){
+						throw error;
+					}
+					return;
+				}
+			);
 		}
 	);
 }
@@ -52,6 +62,23 @@ async function getContributors (convo_id) {
 			}
 
 			return contributors;
+		}
+	);
+}
+
+async function authorize (convo_id, contributor_id) {
+	//verify
+	let authorized = false; 
+	db.query(
+		'SELECT 1 FROM contributor WHERE convo_id = $1 AND contributor_id = $2',
+		[convo_id, contributor_id],
+		(error, results) => {
+			if(error) {
+				throw error;
+			}
+			//true if record is found
+			authorized = (results.rowCount > 0);
+			return authorized;
 		}
 	);
 }

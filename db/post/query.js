@@ -22,7 +22,7 @@ async function createPost (convo_id, contributor_id, post) {
 				throw error;
 			}
 			db.query(
-				'UPDATE convo SET posts = posts + 1 WHERE convo_id = $1',
+				'UPDATE convo SET (posts, last_post_at) = (posts + 1, NOW()) WHERE convo_id = $1',
 				[convo_id],
 				(error, _results) => {
 					if (error) {

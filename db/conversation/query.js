@@ -48,6 +48,16 @@ async function createConvo (user_id, title, post) {
 //see api documentation for structure
 async function getConvo (convo_id) {
 	db.query(
+		'UPDATE convo SET views = views + 1 WHERE convo_id = $1',
+		[convo_id],
+		(error, _result) => {
+			if (error) {
+				throw error;
+			}
+		}
+	);
+
+	db.query(
 		'SELECT * FROM convo WHERE convo_id=$1',
 		[convo_id],
 		(error, result) => {
