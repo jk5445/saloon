@@ -15,13 +15,22 @@ modules.exports = app => {
         const contributor_id = request.body.invite;
         const convo_id = request.body.convo_id;
 
+        let authorized = false;
         try {
-            await db.inviteContributor(convo_id, contributor_id, inviter_id);
+            authorized = await db.authorize(convo_id, user_id);
         } catch(err) {
             throw err;
         }
-
-        response.status(201).end();
+        if(authorized) {
+            try {
+                await db.inviteContributor(convo_id, contributor_id, inviter_id);
+            } catch(err) {
+                throw err;
+            }
+            response.status(201).end();
+        } else {
+            response.status(400).end();
+        }
     });
 
     //accept invite
