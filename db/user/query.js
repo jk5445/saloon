@@ -35,6 +35,10 @@ async function logIn (email, password) {
 			if (error) {
 				throw error;
 			}
+			if(results.rowCount < 1){
+				return false;
+			}
+
 			const hash = results.rows[0]['password_hash'];
 			const valid = await bcrypt.compare(password, hash);
 			return valid;
