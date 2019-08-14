@@ -4,7 +4,7 @@ const db = require('./query');
 //subcomponents of conversations
 //for now users can not edit or delete posts
 
-modules.exports = app => {
+module.exports = app => {
     //create post
     //auth
     app.post('/api/v1/post', async (request, response) => {

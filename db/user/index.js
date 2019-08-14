@@ -2,7 +2,7 @@ const db = require('./query');
 
 //USERS
 
-modules.exports = app => {
+module.exports = app => {
     //signup
     //info in the body
     app.post('/api/v1/signup', async (request, response) => {

@@ -1,7 +1,7 @@
 const db = require('./query');
 //CONTRIBUTORS
 
-modules.exports = app => {
+module.exports = app => {
     //get contributors
     app.get('/api/v1/contributor/:convo_id', (request, response) => {
         //TODO: implement method
