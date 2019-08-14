@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS contributor (
 	CONSTRAINT contributor_key PRIMARY KEY(convo_id, contributor_id)
 );
 
-CREATE TABLE IF NOT EXISTS comment (
+/*CREATE TABLE IF NOT EXISTS comment (
 	comment_id serial PRIMARY KEY,
 	convo_id integer REFERENCES convo (convo_id),
 	prev_id integer REFERENCES comment (comment_id) DEFAULT NULL, 
 	comment_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-);
+);*/
