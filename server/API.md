@@ -253,7 +253,7 @@ get */apiv1/post/:convo_id/:postNumber*
 get */apiv1/contributor/:convo_id'*
 
 **Invite contributor**  
-post */apiv1/contributor
+post */apiv1/contributor*
 
 Request Authorization header
 
