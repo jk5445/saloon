@@ -27,7 +27,7 @@ async function createUser (userName, firstName, lastName, email, password) {
 
 //email and password in body
 //issue token
-async function logIn(email, password) {
+async function logIn (email, password) {
 	db.query(
 		'SELECT password_hash FROM user WHERE email=$1',
 		[email],
