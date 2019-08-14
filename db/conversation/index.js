@@ -23,7 +23,7 @@ module.exports = app => {
 
     //get conversation
     app.get('/apiv1/convo/:convo_id', async (request, response) => {
-        const convo_id = request.body.convo_id;
+        const convo_id = request.params.convo_id;
         
         let convo;
         try{
@@ -39,5 +39,6 @@ module.exports = app => {
     //auth
     app.put('/apiv1/convo/vote/:convo_id/:vote', (request, response) => {
         //TODO: implement method
+        response.end();
     });
 }
