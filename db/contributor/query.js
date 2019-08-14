@@ -1,7 +1,7 @@
 const db = require('../queries');
 const user = require('../user/query.js');
 
-modules.exports(inviteContributor, acceptInvite, getContributors);
+module.exports(inviteContributor, acceptInvite, getContributors);
 
 async function inviteContributor (convo_id, contributor_id, inviter_id) {
 	db.query(

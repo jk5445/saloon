@@ -1,7 +1,7 @@
 const db = require('../queries');
 const user = require('../user/query');
 
-modules.exports(createPost, getPosts, authorize);
+module.exports(createPost, getPosts, authorize);
 
 //a user needs to be part of a conversation to post
 //this check should happen at server level

@@ -1,7 +1,7 @@
 const db = require('../queries');
 const bcrypt = require('bcrypt');
 
-modeuls.exports(createUser, logIn, getUserName);
+module.exports(createUser, logIn, getUserName);
 
 async function createUser (userName, firstName, lastName, email, password) {
 	
