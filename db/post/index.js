@@ -25,8 +25,9 @@ modules.exports = app => {
             } catch (err) {
                 throw err;
             }
-
             response.status(201).end();
+        } else {
+            response.status(400).end();
         }
     });
 
