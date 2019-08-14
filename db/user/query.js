@@ -5,7 +5,8 @@ const saltRounds = 10;
 module.exports = {
 	createUser, 
 	logIn, 
-	getUserName
+	getUserName,
+	getUserById
 };
 
 function createUser (userName, firstName, lastName, email, password, serve) {
@@ -59,15 +60,14 @@ function logIn (email, password, serve) {
 }
 
 //TODO: add user history to user object
-/*
-async function getUserByID (user_id) {
+function getUserById (user_id, serve) {
 
 	db.query(
 	  'SELECT user_name, first_name, last_name, email FROM users WHERE user_ID = $1',
 	  [user_id],
 	  (error, results) => {
 		if (error) {
-      		throw error;
+      		serve(error, null);
 		}
 		
 		const user = {};
@@ -75,11 +75,10 @@ async function getUserByID (user_id) {
 		user.first_name = results.rows[0]['first_name'];
 		user.last_name = results.rows[0]['last_name'];
 		user.email = results.rows[0]['email'];
-    	return user;
+    	serve(null, user);
   	  }
   	);
 }
-*/
 
 function getUserName(user_id, serve) {
 	db.query(

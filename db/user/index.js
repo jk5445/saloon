@@ -44,8 +44,13 @@ module.exports = app => {
     //get user info
     //auth
     app.get('/api/v1/user', (request, response) => {
-        //TODO: implement method
-        response.end();
+        const user_id = request.body.user_id;
+        db.getUserById(user_id, (err, res) => {
+            if(err){
+                throw err;
+            }
+            response.status(200).json(res);
+        })
     });
 
     //edit user
