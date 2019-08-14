@@ -2,6 +2,8 @@ const db = require('../queries');
 const contributor = require('../contributor/query');
 const post = require('../post/query');
 
+modules.exports(createConvo, getConvo);
+
 //to create a conversation a user must provide a title, and a post
 //As these requirements are for all conversations, the whole process flows through this method
 //however it may be better to split this up at the server level
@@ -75,5 +77,3 @@ async function getConvo (convo_id) {
 		}
 	)
 }
-
-modules.exports(createConvo, getConvo);

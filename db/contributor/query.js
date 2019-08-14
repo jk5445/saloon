@@ -1,6 +1,8 @@
 const db = require('../queries');
 const user = require('../user/query.js');
 
+modules.exports(inviteContributor, acceptInvite, getContributors);
+
 async function inviteContributor (convo_id, contributor_id, inviter_id) {
 	db.query(
 		'INSERT INTO contributor (convo_id, contributor_id, inviter_id, ) VALUES ($1, $2, $3)',
@@ -48,5 +50,3 @@ async function getContributors (convo_id) {
 		}
 	);
 }
-
-modules.exports(inviteContributor, acceptInvite, getContributors);
