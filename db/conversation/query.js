@@ -6,7 +6,7 @@ const post = require('../post/query');
 //As these requirements are for all conversations, the whole process flows through this method
 //however it may be better to split this up at the server level
 //title and post is verified by server
-const createConvo = (user_id, title, post, response) => {
+const createConvo = async (user_id, title, post) => {
 	/*const {title, post} = request.body;
 	//user_id should come from token
 	const user_id = parseInt(request.params.id);
@@ -35,7 +35,9 @@ const createConvo = (user_id, title, post, response) => {
 				if (error){
 					throw error;
 				}
-				response();
+				convo = {};
+				convo.convo_id = convo_id;
+				return convo;
 			  }
 			);
 		  }

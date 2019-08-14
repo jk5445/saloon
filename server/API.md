@@ -176,6 +176,13 @@ request body
 "first_post": "postText"  
 }
 
+response body
+
+{  
+&nbsp;&nbsp;&nbsp;&nbsp;
+"convo_id": "id",  
+}
+
 **Get conversation**  
 get */api/convo/:convo_id*
 
