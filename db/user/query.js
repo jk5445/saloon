@@ -1,5 +1,6 @@
 const db = require('../queries');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 module.exports(createUser, logIn, getUserName);
 
@@ -35,13 +36,14 @@ async function logIn(email, password) {
 				throw error;
 			}
 			const hash = results.rows[0]['password_hash'];
-			const valid = await bcrypt.compare(password, hash)
+			const valid = await bcrypt.compare(password, hash);
 			return valid;
 		}
 	)
 }
 
 //TODO: add user history to user object
+/*
 async function getUserByID (user_id) {
 
 	db.query(
@@ -61,6 +63,7 @@ async function getUserByID (user_id) {
   	  }
   	);
 }
+*/
 
 async function getUserName(user_id) {
 	db.query(
