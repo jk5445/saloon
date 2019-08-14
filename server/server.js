@@ -14,8 +14,8 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true,}));
 
-app.get('/api', (request, response) => {
-  response.json({ info: 'Saloon API' });
+app.get('/api/v1', (request, response) => {
+  response.json({ info: 'Saloon API V1' });
 });
 
 
@@ -28,7 +28,14 @@ post(app);
 //Contributors
 contributor(app);
 //Comments
-comment(app);
+//comment(app);
+
+
+const db = require('../db/queries');
+app.get('/pool/end', async (request, response) => {
+    const end = await db.end();
+    response.json(end);
+});
 
 
 app.listen(port, hostname, () => {

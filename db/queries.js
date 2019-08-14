@@ -10,11 +10,16 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB,
   password: process.env.DB_PASS,
-  port: process.env.DB_PORT,
+  port: process.env.DB_PORT
 });
 
 module.exports = {
 	query: (text, params, callback) => {
 		return pool.query(text, params, callback);
-	},
+  },
+  end: async () => {
+    await pool.end();
+    console.log("pool killed");
+    return("pool killed");
+  }
 }
