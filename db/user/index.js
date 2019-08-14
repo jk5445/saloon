@@ -5,7 +5,7 @@ const db = require('./query');
 modules.exports = app => {
     //signup
     //info in the body
-    app.post('/apiv1/signup', (request, response) => {
+    app.post('/apiv1/signup', async (request, response) => {
         const user_name = request.body.user_name;
         const first_name = request.body.first_name;
         const last_name = request.body.last_name;
@@ -24,7 +24,7 @@ modules.exports = app => {
 
     //login
     //info in the body
-    app.get('/apiv1/login', (request, response) => {
+    app.get('/apiv1/login', async (request, response) => {
         const email = request.body.email;
         const password = request.body.password;
 

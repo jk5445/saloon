@@ -7,7 +7,7 @@ const db = require('./query');
 modules.exports = app => {
     //create post
     //auth
-    app.post('/apiv1/post', (request, response) => {
+    app.post('/apiv1/post', async (request, response) => {
         const user_id = request.body.user_id;
         const convo_id = request.body.convo_id;
         const post = request.body.post;
