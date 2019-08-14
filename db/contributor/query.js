@@ -1,36 +1,52 @@
 const db = require('../queries');
+const user = require('../user/query.js');
 
-const inviteContributor = (convo_ID, contributor, status, moderator, response) => {
+const inviteContributor = async (convo_id, contributor_id, inviter_id) => {
 	db.query(
-	  'INSERT INTO contributors (convo_ID, contributor_ID, status, moderator) VALUES ($1, $2, $3, $4) RETURNING contributor_key',
-	  [convo_ID, contributor, status, moderator],
-	  (error, results) => {
-	  	if(error){
-	  		throw error;
-	  	}
-	  	response.status(201).send(results.rows[0]);
-	  }
+		'INSERT INTO contributor (convo_id, contributor_id, inviter_id, ) VALUES ($1, $2, $3)',
+		[convo_id, contributor_id, inviter_id],
+		(error, _results) => {
+	  		if(error){
+	  			throw error;
+			}
+			return;
+		}
 	);
 }
 
-const inviteContributor = (request, response) => {
-	const {convo_ID, contributor, status, moderator} = request.body;
-	const inviter_ID = parseInt(request.params.id);
-
-	//if inviter is in conversation
+const acceptInvite = async (convo_id, contributor_id) => {
 	db.query(
-	  'SELECT 1 FROM contributors WHERE convo_ID = $1 AND inviter_ID = $2',
-	  [convo_ID, inviter_ID],
-	  (error, results) => {
-	  	if (error){
-	  		throw error;
-	  	}
-	  	if (response.rowCount > 0){
-	  		inviteContributor(convo_ID, contributor, status, moderator, response);
-	  	}
-	  	else{
-	  		response.status(401).send(`User is not authorized to invite contributor`);
-	  	}
-	  }
+		'UPDATE contributor SET  accepted_at=NOW() WHERE convo_id=$1 AND contributor_id=$2',
+		[convo_id, contributor_id],
+		(error, _results) => {
+	  		if(error){
+	  			throw error;
+	  		}
+		}
 	);
 }
+
+const getContributors = async (convo_id) => {
+	db.query(
+		'SELECT contributor_id FROM contributor WHERE convo_id=$1 and accepted_at!=NULL',
+		[convo_id],
+		(error, results) => {
+			if (error) {
+				throw error;
+			}
+
+			var i;
+			var contributors = [];
+
+			for(i = 0; i < results.rowCount; i++) {
+				const contributor_id = results.rows[i]["contributor_id"]
+				const name = await user.getUserName(contributor_id);
+				contributors.push(name);
+			}
+
+			return contributors;
+		}
+	);
+}
+
+modules.exports(inviteContributor, acceptInvite, getContributors);

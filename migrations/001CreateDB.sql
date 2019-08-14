@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS convo (
 	convo_id serial PRIMARY KEY,
 	title varchar(150),
-	contributors integer DEFAULT 1,
+	contributors integer DEFAULT 0,
 	posts integer DEFAULT 0,
 	views integer DEFAULT 0,
 	votes integer DEFAULT 0,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS post (
 CREATE TABLE IF NOT EXISTS contributor (
 	convo_id REFERENCES convo (convo_id) NOT NULL,
 	contributor_id REFERENCES users (user_id) NOT NULL,
-	inviter_id REFERENCES user (user_id) DEFAULT NULL,
+	inviter_id REFERENCES user (user_id) NOT NULL,
 	invited_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 	accepted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
 	
