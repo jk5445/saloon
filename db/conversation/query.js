@@ -11,48 +11,52 @@ module.exports = {
 //As these requirements are for all conversations, the whole process flows through this method
 //however it may be better to split this up at the server level
 //title and post is verified by server
-async function createConvo (user_id, title, post) {
+function createConvo (user_id, title, post, serve) {
 	//create convo
 	db.query(
 		'INSERT INTO  convo (title) VALUES ($1) RETURNING convo_id',
 		[title],
 		(error, results) => {
 			if(error) {
-				throw error;
+				serve(error, null);
 			}
 			const convo_id = results.rows[0]['convo_id'];
 			
 			//add user as contributor
-			try {
-				await contributor.inviteContributor (convo_id, user_id, user_id);
-				await contributor.acceptInvite (convo_id, user_id);
-			} catch (error) {
-				throw error;
-			}
+			contributor.inviteContributor (convo_id, user_id, user_id, (err, _res) => {
+				if(err) {
+					serve(error, null);
+				}
+			});
+			contributor.acceptInvite (convo_id, user_id, (err, _res) => {
+				if(err) {
+					serve(error, null);
+				}
+			});
 
 			//create first post
-			try {
-				await post.createPost(convo_id, user_id, post);
-			} catch(error) {
-				throw error;
-			}
+			post.createPost(convo_id, user_id, post, (err, _res) => {
+				if(err) {
+					serve(error, null);
+				}
+			});
 
 			const convo = {};
 			convo.convo_id = convo_id;
-			return convo;
+			serve (null, convo);
 		}
 	);
 }
 
 //returns an object containing all the convo information
 //see api documentation for structure
-async function getConvo (convo_id) {
+function getConvo (convo_id, serve) {
 	db.query(
 		'UPDATE convo SET views = views + 1 WHERE convo_id = $1',
 		[convo_id],
 		(error, _result) => {
 			if (error) {
-				throw error;
+				serve(error, null);
 			}
 		}
 	);
@@ -62,31 +66,33 @@ async function getConvo (convo_id) {
 		[convo_id],
 		(error, result) => {
 			if (error) {
-				throw error;
+				serve(error, null);
 			}
-			const obj = {};
-			obj.title = result.rows[0]['title'];
-			obj.contributorCount = results.rows[0]['contributors'];
-			obj.postCount = results.rows[0]['posts'];
-			obj.views = results.rows[0]['views'];
-			obj.votes = results.rows[0]['votes'];
-			obj.commentCount = results.rows[0]['comments'];
+			const convo = {};
+			convo.title = result.rows[0]['title'];
+			convo.contributorCount = results.rows[0]['contributors'];
+			convo.postCount = results.rows[0]['posts'];
+			convo.views = results.rows[0]['views'];
+			convo.votes = results.rows[0]['votes'];
+			convo.commentCount = results.rows[0]['comments'];
 			
 			//get contributors
-			try {
-				obj.contributors = await contributor.getContributors(convo_id);
-			} catch(error) {
-				throw error;
-			}
+			contributor.getContributors(convo_id, (err, res) => {
+				if (error) {
+					serve(error, null);
+				}
+				convo.contributors = res;
+			});
 
 			//get posts
-			try {
-				obj.posts = await post.getPosts(convo_id, obj.postCount);
-			} catch (error) {
-				throw error;
-			}
+			post.getPosts(convo_id, (err, res) => {
+				if (error) {
+					serve(error, null);
+				}
+				convo.posts = res;
+			});
 
-			return obj;
+			serve (null, convo);
 		}
 	)
 }

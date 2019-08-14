@@ -8,44 +8,52 @@ module.exports = {
 	getUserName
 };
 
-async function createUser (userName, firstName, lastName, email, password) {
+function createUser (userName, firstName, lastName, email, password, serve) {
 	
-	const hash = await bcrypt.hash(password, saltRounds);
-	if (error){
-		throw error;
-	}
+	let hash;
+	bcrypt.hash(password, saltRounds, (err, res) => {
+		if (err){
+			serve(err, null);
+		}
+		hash = res;
+	});
 	db.query(
 		'INSERT INTO users (user_name, first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING user_id',
 		[userName, firstName, lastName, email, hash],
 		(error, results) => {
 	   		if (error) {
-	   			throw error;
+				serve(error, null);
 			}
 			
 			const user = {};
 			user.user_id = results.rows[0]['user_id'];
-	   		return user;
+	   		serve(null, user);
 	 	}
 	);
 }
 
 //email and password in body
 //issue token
-async function logIn (email, password) {
+function logIn (email, password, serve) {
 	db.query(
 		'SELECT password_hash FROM user WHERE email=$1',
 		[email],
 		(error, results) => {
 			if (error) {
-				throw error;
+				serve(error, null);
 			}
 			if(results.rowCount < 1){
 				return false;
 			}
 
 			const hash = results.rows[0]['password_hash'];
-			const valid = await bcrypt.compare(password, hash);
-			return valid;
+			let valid;
+			bcrypt.compare(password, hash, (err, res) => {
+				if(err){
+					serve(err, null);
+				}
+				serve(null, valid);
+			});
 		}
 	)
 }
@@ -73,15 +81,15 @@ async function getUserByID (user_id) {
 }
 */
 
-async function getUserName(user_id) {
+function getUserName(user_id, serve) {
 	db.query(
 	  'SELECT user_name FROM users WHERE user_ID = $1',
 	  [user_id],
 	  (error, results) => {
 		if (error) {
-      		throw error;
+			serve(error, null);
     	}
-    	return results.rows[0]['user_name'];
+    	serve(null, results.rows[0]['user_name']);
   	  }
   	);
 }

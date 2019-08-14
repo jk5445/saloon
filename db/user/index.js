@@ -5,35 +5,34 @@ const db = require('./query');
 module.exports = app => {
     //signup
     //info in the body
-    app.post('/api/v1/signup', async (request, response) => {
+    app.post('/api/v1/signup', (request, response) => {
         const user_name = request.body.user_name;
         const first_name = request.body.first_name;
         const last_name = request.body.last_name;
         const email = request.body.email;
         const password = request.body.password;
 
-        let user;
-        try {
-            user = await db.createUser(user_name, first_name, last_name, email, password);
-        } catch(err) {
-            throw err;
-        }
-
-        response.status(201).json(user);
+        db.createUser(user_name, first_name, last_name, email, password, (err, res) => {
+            if(err) {
+                throw err;
+            }
+            response.status(201).json(user);
+        }); 
     });
 
     //login
     //info in the body
-    app.get('/api/v1/login', async (request, response) => {
+    app.get('/api/v1/login', (request, response) => {
         const email = request.body.email;
         const password = request.body.password;
 
         let valid;
-        try {
-            valid = await db.logIn(email, password);
-        } catch(err) {
-            throw err;
-        }
+        db.logIn(email, password, (err, res) => {
+            if(err) {
+                throw err;
+            }
+            valid = res;
+        });
 
         if(valid){
             response.status(200).json({loggedIn: true});

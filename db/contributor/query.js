@@ -8,48 +8,48 @@ module.exports = {
 	authorize
 };
 
-async function inviteContributor (convo_id, contributor_id, inviter_id) {
+function inviteContributor (convo_id, contributor_id, inviter_id, serve) {
 	db.query(
 		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, $2, $3)',
 		[convo_id, contributor_id, inviter_id],
 		(error, _results) => {
 	  		if(error){
-	  			throw error;
+	  			serve(error, null);
 			}
-			return;
+			serve(null, null);
 		}
 	);
 }
 
-async function acceptInvite (convo_id, contributor_id) {
+function acceptInvite (convo_id, contributor_id, serve) {
 	db.query(
 		'UPDATE contributor SET accepted_at = NOW() WHERE convo_id = $1 AND contributor_id = $2',
 		[convo_id, contributor_id],
 		(error, _results) => {
 	  		if(error){
-	  			throw error;
+	  			serve(error, null);
 			}
 			db.query(
 				'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1',
 				[convo_id],
 				(error, _results) => {
 					if(error){
-						throw error;
+						serve(error, null);
 					}
-					return;
+					serve(null, null);
 				}
 			);
 		}
 	);
 }
 
-async function getContributors (convo_id) {
+function getContributors (convo_id, serve) {
 	db.query(
 		'SELECT contributor_id FROM contributor WHERE convo_id=$1 and accepted_at!=NULL',
 		[convo_id],
 		(error, results) => {
 			if (error) {
-				throw error;
+				serve(error, null);
 			}
 
 			let i;
@@ -57,28 +57,26 @@ async function getContributors (convo_id) {
 
 			for(i = 0; i < results.rowCount; i++) {
 				const contributor_id = results.rows[i]["contributor_id"]
-				const name = await user.getUserName(contributor_id);
-				contributors.push(name);
+				user.getUserName(contributor_id, (err, res) => {contributors.push(res)});
 			}
 
-			return contributors;
+			serve(null, contributors);
 		}
 	);
 }
 
-async function authorize (convo_id, contributor_id) {
+function authorize (convo_id, contributor_id, serve) {
 	//verify
-	let authorized = false; 
 	db.query(
 		'SELECT 1 FROM contributor WHERE convo_id = $1 AND contributor_id = $2',
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
-				throw error;
+				serve(error, null);
 			}
 			//true if record is found
-			authorized = (results.rowCount > 0);
-			return authorized;
+			const authorized = (results.rowCount > 0);
+			serve(null, authorized);
 		}
 	);
 }

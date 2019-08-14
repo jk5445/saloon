@@ -9,7 +9,7 @@ module.exports = {
 
 //a user needs to be part of a conversation to post
 //this check should happen at server level
-async function createPost (convo_id, contributor_id, post) {
+function createPost (convo_id, contributor_id, post, serve) {
 	//with auth contributor_id will come from JWT
 	/*const {post, contributor_id, convo_id} = request.body;
 	*/
@@ -19,52 +19,52 @@ async function createPost (convo_id, contributor_id, post) {
 		[convo_id, contributor_id,  post],
 		(error, _results) => {
 		  	if (error){
-				throw error;
+				serve(error, null);
 			}
 			db.query(
 				'UPDATE convo SET (posts, last_post_at) = (posts + 1, NOW()) WHERE convo_id = $1',
 				[convo_id],
 				(error, _results) => {
 					if (error) {
-						throw error;
+						serve(error, null);
 					}
-					return;
+					serve(null, null);
 				}
 			);
 		}
 	);
 }
 
-async function getPosts (convo_id) {
-	let posts = [];
+function getPosts (convo_id, serve) {
 	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1',
 		[convo_id],
 		(error, results) => {
 			if (error) {
-				throw error;
+				serve(error, null);
 			}
+			let posts = [];
 			let i;
 			for (i = 0; i < results.rowCount; i++) {
-				post = {};
+				const post = {};
 				post.post = results.rows[i]['post'];
 				post.created_at = results.rows[i]['created_at'];
 
-				try {
-					const user_id = results.rows[i]['user_id']
-					post.contributor = await user.getUserName(user_id);
-				} catch(error) {
-					throw error;
-				}
-
+				const user_id = results.rows[i]['user_id']
+				user.getUserName(user_id, (err, res) => {
+					if(err){
+						serve(error, null);
+					}
+					post.contributor = res;
+				});
 				posts.push(post);
 			}
-			return posts;
+			serve(null, posts);
 		}
 	);
 }
 
 //call directly from server
-async function authorize (convo_id, contributor_id) {
+function authorize (convo_id, contributor_id, serve) {
 	//verify
 	let authorized = false; 
 	db.query(
@@ -72,11 +72,11 @@ async function authorize (convo_id, contributor_id) {
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
-				throw error;
+				serve(error, null);
 			}
 			//true if record is found
 			authorized = (results.rowCount > 0);
-			return authorized;
+			serve(null, authorized);
 		}
 	);
 }
