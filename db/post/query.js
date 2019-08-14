@@ -1,40 +1,44 @@
 const db = require('../queries');
 
 //a user needs to be part of a conversation to post
-const createPost = (convo_id, contributor_id, post, response) => {
+const createPost = async (convo_id, contributor_id, post) => {
 	//with auth contributor_id will come from JWT
 	/*const {post, contributor_id, convo_id} = request.body;
 	*/
 
-	authorize(convo_id, contributor_id, 
-	  (authorized) => {
-		if (authorized) {
-			db.query(
-				'INSERT INTO post (convo_id, post, contributor_id) VALUES ($1, $2, $3)',
-				[convo_id, post, contributor_id],
-				(error, _results) => {
-				  	if (error){
-						throw error;
-					}
-					response.status(201).send();
-					db.query(
-						'UPDATE convo SET posts = posts + 1 WHERE convo_id = $1',
-						[convo_id],
-						(error, _results) => {
-							if (error) {
-								throw error;
-							}
-							response();
-						}
-					)
+	const authorized = false;
+	try {
+		authorized = await authorize(convo_id, contributor_id);
+	}
+	catch(error){
+		throw error;
+	}
+
+	if (authorized) {
+		db.query(
+			'INSERT INTO post (convo_id, post, contributor_id) VALUES ($1, $2, $3)',
+			[convo_id, post, contributor_id],
+			(error, _results) => {
+			  	if (error){
+					throw error;
 				}
-			);
-		}
-	  }
-	);
+				response.status(201).send();
+				db.query(
+					'UPDATE convo SET posts = posts + 1 WHERE convo_id = $1',
+					[convo_id],
+					(error, _results) => {
+						if (error) {
+							throw error;
+						}
+						return;
+					}
+				);
+			}
+		);
+	}
 }
 
-const getPosts = (convo_id, response) => {
+const getPosts = async (convo_id) => {
 	posts = [];
 	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1',
 		[convo_id],
@@ -57,14 +61,14 @@ const getPosts = (convo_id, response) => {
 						post.contributor = result.rows[0]['user_name'];
 						posts.push(post);
 					}
-				)
+				);
 			}
-			response(posts);
+			return posts;
 		}
-	)
+	);
 }
 
-const authorize = (convo_id, contributor_id, response) => {
+const authorize = async (convo_id, contributor_id) => {
 	//verify
 	var authorized = false; 
 	db.query(
@@ -75,8 +79,8 @@ const authorize = (convo_id, contributor_id, response) => {
 				throw error;
 			}
 			//true if record is found
-			authorized = (results.rowCount > 0);
-			response(authorized);
+			authorized = await (results.rowCount > 0);
+			return authorized;
 		}
 	);
 }
