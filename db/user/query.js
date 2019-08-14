@@ -2,7 +2,11 @@ const db = require('../queries');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-module.exports(createUser, logIn, getUserName);
+module.exports = {
+	createUser, 
+	logIn, 
+	getUserName
+};
 
 async function createUser (userName, firstName, lastName, email, password) {
 	
