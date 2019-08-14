@@ -35,8 +35,8 @@ const getContributors = async (convo_id) => {
 				throw error;
 			}
 
-			var i;
-			var contributors = [];
+			let i;
+			let contributors = [];
 
 			for(i = 0; i < results.rowCount; i++) {
 				const contributor_id = results.rows[i]["contributor_id"]

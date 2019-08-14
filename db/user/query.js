@@ -15,7 +15,7 @@ const createUser = async (userName, firstName, lastName, email, password) => {
 	   			throw error;
 			}
 			
-			var user = {};
+			const user = {};
 			user.user_id = results.rows[0]['user_id'];
 	   		return user;
 	 	}
@@ -50,7 +50,7 @@ const getUserByID = async (user_id) => {
       		throw error;
 		}
 		
-		var user = {};
+		const user = {};
 		user.user_name = results.rows[0]['user_name'];
 		user.first_name = results.rows[0]['first_name'];
 		user.last_name = results.rows[0]['last_name'];

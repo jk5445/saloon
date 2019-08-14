@@ -27,12 +27,12 @@ const createConvo = async (user_id, title, post) => {
 
 			//create first post
 			try {
-				await post.createPost(convo_id, contributor_id, post);
+				await post.createPost(convo_id, user_id, post);
 			} catch(error) {
 				throw error;
 			}
 
-			convo = {};
+			const convo = {};
 			convo.convo_id = convo_id;
 			return convo;
 		}
@@ -41,7 +41,7 @@ const createConvo = async (user_id, title, post) => {
 
 //returns an object containing all the convo information via callback
 //callback: response(object)
-const getConvo = async (convo_id, response) => {
+const getConvo = async (convo_id) => {
 	db.query(
 		'SELECT * FROM convo WHERE convo_id=$1',
 		[convo_id],
@@ -49,7 +49,7 @@ const getConvo = async (convo_id, response) => {
 			if (error) {
 				throw error;
 			}
-			var obj = {};
+			const obj = {};
 			obj.title = result.rows[0]['title'];
 			obj.contributorCount = results.rows[0]['contributors'];
 			obj.postCount = results.rows[0]['posts'];
