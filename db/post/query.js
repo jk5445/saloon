@@ -3,7 +3,7 @@ const user = require('../user/query');
 
 //a user needs to be part of a conversation to post
 //this check should happen at server level
-const createPost = async (convo_id, contributor_id, post) => {
+async function createPost (convo_id, contributor_id, post) {
 	//with auth contributor_id will come from JWT
 	/*const {post, contributor_id, convo_id} = request.body;
 	*/
@@ -29,7 +29,7 @@ const createPost = async (convo_id, contributor_id, post) => {
 	);
 }
 
-const getPosts = async (convo_id) => {
+async function getPosts (convo_id) {
 	posts = [];
 	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1',
 		[convo_id],
@@ -58,7 +58,7 @@ const getPosts = async (convo_id) => {
 }
 
 //call directly from server
-const authorize = async (convo_id, contributor_id) => {
+async function authorize (convo_id, contributor_id) {
 	//verify
 	let authorized = false; 
 	db.query(

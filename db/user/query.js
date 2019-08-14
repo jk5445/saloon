@@ -1,7 +1,7 @@
 const db = require('../queries');
 const bcrypt = require('bcrypt');
 
-const createUser = async (userName, firstName, lastName, email, password) => {
+async function createUser (userName, firstName, lastName, email, password) {
 	
 	const hash = await bcrypt.hash(password, saltRounds);
 	if (error){
@@ -24,7 +24,7 @@ const createUser = async (userName, firstName, lastName, email, password) => {
 
 //email and password in body
 //issue token
-const logIn = async (email, password) => {
+async function logIn(email, password) {
 	db.query(
 		'SELECT password_hash FROM user WHERE email=$1',
 		[email],
@@ -40,7 +40,7 @@ const logIn = async (email, password) => {
 }
 
 //TODO: add user history to user object
-const getUserByID = async (user_id) => {
+async function getUserByID (user_id) {
 
 	db.query(
 	  'SELECT user_name, first_name, last_name, email FROM users WHERE user_ID = $1',
@@ -60,7 +60,7 @@ const getUserByID = async (user_id) => {
   	);
 }
 
-const getUserName = async (user_id) => {
+async function getUserName(user_id) {
 	db.query(
 	  'SELECT user_name FROM users WHERE user_ID = $1',
 	  [user_id],

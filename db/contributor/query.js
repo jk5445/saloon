@@ -1,7 +1,7 @@
 const db = require('../queries');
 const user = require('../user/query.js');
 
-const inviteContributor = async (convo_id, contributor_id, inviter_id) => {
+async function inviteContributor (convo_id, contributor_id, inviter_id) {
 	db.query(
 		'INSERT INTO contributor (convo_id, contributor_id, inviter_id, ) VALUES ($1, $2, $3)',
 		[convo_id, contributor_id, inviter_id],
@@ -14,7 +14,7 @@ const inviteContributor = async (convo_id, contributor_id, inviter_id) => {
 	);
 }
 
-const acceptInvite = async (convo_id, contributor_id) => {
+async function acceptInvite (convo_id, contributor_id) {
 	db.query(
 		'UPDATE contributor SET  accepted_at=NOW() WHERE convo_id=$1 AND contributor_id=$2',
 		[convo_id, contributor_id],
@@ -26,7 +26,7 @@ const acceptInvite = async (convo_id, contributor_id) => {
 	);
 }
 
-const getContributors = async (convo_id) => {
+async function getContributors (convo_id) {
 	db.query(
 		'SELECT contributor_id FROM contributor WHERE convo_id=$1 and accepted_at!=NULL',
 		[convo_id],

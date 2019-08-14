@@ -6,7 +6,7 @@ const post = require('../post/query');
 //As these requirements are for all conversations, the whole process flows through this method
 //however it may be better to split this up at the server level
 //title and post is verified by server
-const createConvo = async (user_id, title, post) => {
+async function createConvo (user_id, title, post) {
 	//create convo
 	db.query(
 		'INSERT INTO  convo (title) VALUES ($1) RETURNING convo_id',
@@ -39,9 +39,9 @@ const createConvo = async (user_id, title, post) => {
 	);
 }
 
-//returns an object containing all the convo information via callback
-//callback: response(object)
-const getConvo = async (convo_id) => {
+//returns an object containing all the convo information
+//see api documentation for structure
+async function getConvo (convo_id) {
 	db.query(
 		'SELECT * FROM convo WHERE convo_id=$1',
 		[convo_id],
