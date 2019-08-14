@@ -7,48 +7,41 @@ const post = require('../post/query');
 //however it may be better to split this up at the server level
 //title and post is verified by server
 const createConvo = async (user_id, title, post) => {
-	/*const {title, post} = request.body;
-	//user_id should come from token
-	const user_id = parseInt(request.params.id);
-	*/
-
+	//create convo
 	db.query(
-	  'INSERT INTO  convo (title) VALUES ($1) RETURNING convo_id',
-	  [title],
-	  (error, results) => {
-	  	if(error) {
-	  		throw error;
-		}
-		const convo_id = results.rows[0]['convo_id'];
-		
-		//add user as contributor
-		db.query(
-		  'INSERT INTO contributor (convo_id, contributor_id, accepted_at) VALUES ($1, $2, CURRENT_TIMESTAMP)',
-		  [convo_id, user_id],
-		  (error, _results) => {
-			if (error){
+		'INSERT INTO  convo (title) VALUES ($1) RETURNING convo_id',
+		[title],
+		(error, results) => {
+			if(error) {
+				throw error;
+			}
+			const convo_id = results.rows[0]['convo_id'];
+			
+			//add user as contributor
+			try {
+				await contributor.inviteContributor (convo_id, user_id, user_id);
+				await contributor.acceptInvite (convo_id, user_id);
+			} catch (error) {
 				throw error;
 			}
 
 			//create first post
-			post.createPost(convo_id, contributor_id, post, (error, _results) => {
-				if (error){
-					throw error;
-				}
-				convo = {};
-				convo.convo_id = convo_id;
-				return convo;
-			  }
-			);
-		  }
-		);
-	  }
+			try {
+				await post.createPost(convo_id, contributor_id, post);
+			} catch(error) {
+				throw error;
+			}
+
+			convo = {};
+			convo.convo_id = convo_id;
+			return convo;
+		}
 	);
 }
 
 //returns an object containing all the convo information via callback
 //callback: response(object)
-const getConvo = (convo_id, response) => {
+const getConvo = async (convo_id, response) => {
 	db.query(
 		'SELECT * FROM convo WHERE convo_id=$1',
 		[convo_id],
@@ -63,25 +56,22 @@ const getConvo = (convo_id, response) => {
 			obj.views = results.rows[0]['views'];
 			obj.votes = results.rows[0]['votes'];
 			obj.commentCount = results.rows[0]['comments'];
-			obj.contributors;
-			contributor.getContributors(convo_id, 
-			  (error, result) => {
-				if (error) {
-					throw error;
-				}
-				obj.contributors = result;
-				obj.posts;
-				post.getPosts(convo_id, obj.postCount, 
-				  (error, result) => {
-					if (error) {
-						throw error;
-					}
-					obj.posts = result;
-					response(obj);
-				  }
-				);
-			  }
-			);
+			
+			//get contributors
+			try {
+				obj.contributors = await contributor.getContributors(convo_id);
+			} catch(error) {
+				throw error;
+			}
+
+			//get posts
+			try {
+				obj.posts = await post.getPosts(convo_id, obj.postCount);
+			} catch (error) {
+				throw error;
+			}
+
+			return obj;
 		}
 	)
 }
