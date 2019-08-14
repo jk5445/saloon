@@ -1,16 +1,38 @@
+const db = require('./query');
+
 //CONVERSATIONS
 //for now users can not edit or delete conversations
 
-modules.exports = app => {
+module.exports = app => {
     //create conversation
     //auth
-    app.post('/apiv1/convo', (request, response) => {
-        //TODO: implement method
+    app.post('/apiv1/convo', async (request, response) => {
+        const title = request.body.title;
+        const post = request.body.first_post;
+        const user_id = request.body.user_id;
+
+        let convo;
+        try {
+            convo = await db.createConvo(user_id, title, post);
+        } catch (err) {
+            throw err;
+        }
+
+        response.json(convo);
     });
 
     //get conversation
-    app.get('/apiv1/convo/:convo_id', (request, response) => {
-        //TODO: implement method
+    app.get('/apiv1/convo/:convo_id', async (request, response) => {
+        const convo_id = request.body.convo_id;
+        
+        let convo;
+        try{
+            convo = await db.getConvo(convo_id);
+        } catch (err) {
+            throw err;
+        }
+
+        response.json(convo);
     });
 
     //vote on conversation
