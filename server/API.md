@@ -1,7 +1,7 @@
 ## User
 
 **signup**  
-post */api/signup*
+post */apiv1/signup*
 
 request body  
 {  
@@ -23,7 +23,7 @@ response: (user will get an email to confirm email address before they can get a
 - status
 
 **login**  
-get */api/login*
+get */apiv1/login*
 
 request body  
 {  
@@ -36,7 +36,7 @@ response Authorization header
 
 **account info**
 *not a priority*  
-get */api/user*
+get */apiv1/user*
 
 request Authorization header  
 response body  
@@ -89,7 +89,7 @@ response body
 
 **edit user info**
 *not a priority*  
-put */api/user*
+put */apiv1/user*
 
 request Authorization header  
 request body  
@@ -106,7 +106,7 @@ request body
 
 **delete user**
 *not a priority*  
-delete */api/user*
+delete */apiv1/user*
 
 request Authorization header  
 request body  
@@ -150,22 +150,22 @@ All feed responses will have the following response body:
 
 
 **Get Feed for homepage**  
-get */api/feed*
+get */apiv1/feed*
 
 **Get Feed by tag**
 *secondary priority*  
-get */api/feed/:tag_id*
+get */apiv1/feed/:tag_id*
 
 **Get Feed by contributor**
 *secondary priority*  
-get */api/feed/:contributor_id*
+get */apiv1/feed/:contributor_id*
 
 
 ## Conversation
 For now, users can not edit or delete conversations.
 
 **Create conversation**  
-post */api/convo*
+post */apiv1/convo*
 
 request Authorization header  
 request body  
@@ -184,7 +184,7 @@ response body
 }
 
 **Get conversation**  
-get */api/convo/:convo_id*
+get */apiv1/convo/:convo_id*
 
 response body  
 {  
@@ -221,7 +221,7 @@ response body
 }
 
 **Vote on conversation**  
-put */api/convo/vote/:convo_id/:vote*
+put */apiv1/convo/vote/:convo_id/:vote*
 
 request Authorization header  
 :vote is either "up" or "down"
@@ -231,7 +231,7 @@ subcomponents of conversations
 For now, users can not edit or delete posts.
 
 **Create post**  
-post */api/post*
+post */apiv1/post*
 
 request Authorization header  
 request body  
@@ -244,16 +244,16 @@ request body
 
 **Get post**
 *will not implement for now. included in get convo*  
-get */api/post/:convo_id/:postNumber*
+get */apiv1/post/:convo_id/:postNumber*
 
 ## Contributors
 
 **Get contributors**
 *will not implement for now. included in get convo*  
-get */api/contributor/:convo_id'*
+get */apiv1/contributor/:convo_id'*
 
 **Invite contributor**  
-post */api/contributor
+post */apiv1/contributor
 
 Request Authorization header
 
@@ -266,13 +266,13 @@ request body
 }
 
 **Accept invite**  
-put */api/contributor/:convo_id'*
+put */apiv1/contributor/:convo_id'*
 
 Request Authorization header
 
 ## Comments
 **Get comments**  
-get */api/comment/:convo_id'*
+get */apiv1/comment/:convo_id'*
 
 response body  //needs thought
 {  
@@ -299,7 +299,7 @@ response body  //needs thought
 }
 
 **Make base comment**  
-post */api/comment*
+post */apiv1/comment*
 
 Request Authorization header  
 request body  
@@ -311,7 +311,7 @@ request body
 }
 
 **Comment as reply to prev comment**  
-post */api/comment/:comment_id*
+post */apiv1/comment/:comment_id*
 
 Request Authorization header  
 request body  
@@ -323,7 +323,7 @@ request body
 }
 
 **Vote on comment**
-put */api/comment/vote/:comment_id/:vote'*
+put */apiv1/comment/vote/:comment_id/:vote'*
 
 Request Authorization header  
 :vote is up or down
