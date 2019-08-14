@@ -23,7 +23,8 @@ async function acceptInvite (convo_id, contributor_id) {
 		(error, _results) => {
 	  		if(error){
 	  			throw error;
-	  		}
+			  }
+			  return;
 		}
 	);
 }
