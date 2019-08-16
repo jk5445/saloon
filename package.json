@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "node /server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./server/server",
+    "test": "node tests"
   },
   "author": "",
   "license": "ISC",
