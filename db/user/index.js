@@ -14,9 +14,10 @@ module.exports = app => {
 
         db.createUser(user_name, first_name, last_name, email, password, (err, res) => {
             if(err) {
+                console.log(res);
                 throw err;
             }
-            response.status(201).json(user);
+            response.status(201).json(res);
         }); 
     });
 
@@ -29,16 +30,16 @@ module.exports = app => {
         let valid;
         db.logIn(email, password, (err, res) => {
             if(err) {
+                console.log(res);
                 throw err;
             }
-            valid = res;
-        });
 
-        if(valid){
-            response.status(200).json({loggedIn: true});
-        } else {
-            response.status(400).json({loggedIn: false});
-        }
+            if(res){
+                response.status(200).json({loggedIn: true, user_id: res.user_id});
+            } else {
+                response.status(400).json({loggedIn: false});
+            }
+        });
     });
 
     //get user info
@@ -47,6 +48,7 @@ module.exports = app => {
         const user_id = request.body.user_id;
         db.getUserById(user_id, (err, res) => {
             if(err){
+                console.log(res);
                 throw err;
             }
             response.status(200).json(res);

@@ -15,21 +15,21 @@ module.exports = app => {
         let authorized = false;
         db.authorize(convo_id, user_id, (err, res) => {
             if (err) {
+                console.log(res);
                 throw err;
             }
-            authorized = res;
+            else if(res) {
+                db.createPost(convo_id, user_id, post, (err, res) => {
+                    if(err) {
+                        console.log(res);
+                        throw err;
+                    }
+                    response.status(201).end();
+                });
+            } else {
+                response.status(400).end();
+            }
         });
-
-        if(authorized) {
-            db.createPost(convo_id, user_id, post, (err, _res) => {
-                if(err) {
-                    throw err;
-                }
-            response.status(201).end();
-            });
-        } else {
-            response.status(400).end();
-        }
     });
 
     //get post

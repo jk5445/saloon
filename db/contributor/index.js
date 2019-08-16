@@ -15,24 +15,23 @@ module.exports = app => {
         const contributor_id = request.body.invite;
         const convo_id = request.body.convo_id;
 
-        let authorized = false;
-        db.authorize(convo_id, user_id, (err, res) => {
+        db.authorize(convo_id, inviter_id, (err, res) => {
             if (err){
+                console.log("ERROR LOG: " + res);
                 throw err;
             }
-            authorized = res;
+            if(res) {
+                db.inviteContributor(convo_id, contributor_id, inviter_id, (err, _res) => {
+                    if(err) {
+                        console.log("ERROR LOG: " + res);
+                        throw err;
+                    }
+                    response.status(201).end();
+                });
+            } else {
+                response.status(400).end();
+            }
         });
-
-        if(authorized) {
-            db.inviteContributor(convo_id, contributor_id, inviter_id, (err, _res) => {
-                if(err) {
-                    throw err;
-                }
-                response.status(201).end();
-            });
-        } else {
-            response.status(400).end();
-        }
     });
 
     //accept invite
@@ -40,8 +39,9 @@ module.exports = app => {
         const contributor_id = request.body.user_id;
         const convo_id = request.params.convo_id;
 
-        db.acceptInvite(convo_id, user_id, (err, _res) => {
+        db.acceptInvite(convo_id, contributor_id, (err, res) => {
             if(err) {
+                console.log("ERROR LOG: " + res);
                 throw err;
             }
             response.status(200).end();

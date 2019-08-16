@@ -8,14 +8,16 @@ module.exports = app => {
     //auth
     app.post('/api/v1/convo', (request, response) => {
         const title = request.body.title;
-        const post = request.body.first_post;
+        const post = request.body.post;
         const user_id = request.body.user_id;
 
         db.createConvo(user_id, title, post, (err, res) => {
             if(err){
-                throw err;
+                console.log(res);
+                throw(err);
+            } else if (res){
+                return response.json(res);
             }
-            response.json(res);
         });
     });
 
@@ -24,6 +26,7 @@ module.exports = app => {
         const convo_id = request.params.convo_id;
         db.getConvo(convo_id, (err, res) => {
             if(err){
+                console.log(res);
                 throw err;
             }
             response.json(res);
