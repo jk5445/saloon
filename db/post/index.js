@@ -1,4 +1,5 @@
 const db = require('./query');
+const {validate} = require('../auth')
 
 //Posts
 //subcomponents of conversations
@@ -7,7 +8,7 @@ const db = require('./query');
 module.exports = app => {
     //create post
     //auth
-    app.post('/api/v1/post', (request, response) => {
+    app.post('/api/v1/post', validate, (request, response) => {
         const user_id = request.body.user_id;
         const convo_id = request.body.convo_id;
         const post = request.body.post;
