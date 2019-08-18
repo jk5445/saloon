@@ -2,7 +2,6 @@
 //this will enable us to have a central file for db access
 //keep your db credentials in a seperate file
 
-require('dotenv').config();
 const Pool = require('pg').Pool;
 
 const pool = new Pool({
