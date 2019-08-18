@@ -15,7 +15,7 @@ module.exports = app => {
 
         db.createUser(user_name, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
-                console.log(res);
+                console.log(user_id);
                 throw err;
             }
 
