@@ -1,7 +1,7 @@
 ## User
 
 **signup**  
-post */api/v1/signup*
+post */api/v1/user/signup*
 
 request body  
 {  
@@ -23,7 +23,7 @@ response: (user will get an email to confirm email address before they can get a
 - status
 
 **login**  
-get */api/v1/login*
+post */api/v1/user/login*
 
 request body  
 {  
@@ -32,7 +32,7 @@ request body
 &nbsp;&nbsp;&nbsp;&nbsp;
 "password": "password"  
 }  
-response Authorization header
+response { "token" }
 
 **account info**
 *not a priority*  
@@ -173,7 +173,7 @@ request body
 &nbsp;&nbsp;&nbsp;&nbsp;
 "title": "Title",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"first_post": "postText"  
+"post": "postText"  
 }
 
 response body

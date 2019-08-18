@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const axios = require('axios');
 const db = require('../db/queries');
 
@@ -10,11 +12,12 @@ axios.get(url)
 .then( res => {
     console.log(res.data);
 
-//USER
-let user_id1;
-let user_id2;
 
-url = "http://localhost:3000/api/v1/signup";
+let token1;
+let token2;
+
+url = "http://localhost:3000/api/v1/user/signup";
+
 console.log("\npost: " + url);
 axios({
     method: 'post',
@@ -27,10 +30,11 @@ axios({
         password: 'pass'
     }
 }).then(res => {
-        user_id1 = res.data.user_id;
-        console.log("\nuser_id1 is: " + user_id1);
+        token1 = res.data;
+        console.log("\ntoken1 is: " + token1);
 
-url = "http://localhost:3000/api/v1/signup";
+url = "http://localhost:3000/api/v1/user/signup";
+
 console.log("\npost: " + url);
 axios({
     method: 'post',
@@ -43,36 +47,38 @@ axios({
         password: 'pass'
     }
 }).then(res => {
-        user_id2 = res.data.user_id;
-        console.log("\nuser_id2 is: " + user_id2);
+        token2 = res.data;
+        console.log("\token22 is: " + token2);
 
-url = "http://localhost:3000/api/v1/login";
-console.log("\nget: " + url);
+url = "http://localhost:3000/api/v1/user/login";
+console.log("\npost: " + url);
 axios({
-    method: 'get',
+    method: 'post',
     url: url,
     data: {
         email: 'email@saloon.org',
         password: 'pass'
     }
-}).then(res => { console.log(res.data);
+}).then(res => { 
+    token1 = res.data;
+    console.log(res.data);
 
 url = "http://localhost:3000/api/v1/user";
 console.log("\nget: " + url);
 axios({
     method: 'get',
     url: url,
-    data: {
-        user_id: user_id1
+    headers: {
+        authorization: token1
     }
 }).then(res => { console.log(res.data)
 
-console.log(user_id2);
+console.log("\nget: " + url);
 axios({
     method: 'get',
     url:url,
-    data: {
-        user_id: user_id2
+    headers: {
+        authorization: token2
     }
 })
 .then(res => { console.log(res.data)
@@ -85,8 +91,10 @@ console.log("\npost: " + url);
 axios({
     method: 'post',
     url: url,
+    headers: {
+        authorization: token1
+    },
     data: {
-        user_id: user_id1,
         title: 'Epic Title',
         post: 'Testing the first saloon post!'
     }
@@ -99,24 +107,34 @@ console.log("\npost: " + url);
 axios({
     method: 'post',
     url: url,
+    headers: {
+        authorization: token1
+    },
     data: {
         convo_id: convo_id,
-        invite: user_id2,
-        user_id: user_id1
+        invite: "peehs"
     }
 }).then(res => { console.log("invite success")
 
 url += "/" + convo_id;
 console.log("\nput: " + url);
-axios.put(url, {user_id: user_id2}).then(res => {console.log("accept success");
+axios({
+    method: 'put',
+    url: url, 
+    headers: {
+    authorization: token2
+}
+}).then(res => {console.log("accept success");
 
 url = "http://localhost:3000/api/v1/post";
 console.log("\npost: " + url);
 axios({
     method: 'post',
     url: url,
+    headers: {
+        authorization: token2
+    },
     data: {
-        user_id: user_id1,
         convo_id: convo_id,
         post: 'Testing the second saloon post!!'
     }
@@ -127,8 +145,10 @@ console.log("\npost: " + url);
 axios({
     method: 'post',
     url: url,
+    headers: {
+        authorization: token1
+    },
     data: {
-        user_id: user_id2,
         convo_id: convo_id,
         post: 'Testing the third saloon post!!'
     }
@@ -140,21 +160,19 @@ axios.get(url).then(
     res => { console.log(res.data);
 
         db.query(
-            'DELETE FROM contributor; DELETE FROM post; DELETE FROM convo; DELETE FROM users', [], (error, results) => {
+            'DELETE FROM contributor; DELETE FROM post; DELETE FROM convo; DELETE FROM users', [], (error, _results) => {
                 if(error){
                     console.log(error);
                 } else {
                     console.log("db cleared");
+                    axios.get('http://localhost:3000/pool/end')
+                    .then(res => console.log(res.data), err => console.log(err))
                 }
             }
         );
+})
+},
 
-
-axios.get('http://localhost:3000/pool/end')
-.then(
-    res => {console.log(res.data);},  
-    err => console.log(err))},
-    err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},

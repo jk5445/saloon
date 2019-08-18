@@ -1,6 +1,7 @@
+require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
+const bodyParser = require('body-parser');
 
 const user = require('../db/user');
 const conversation = require('../db/conversation');
@@ -14,7 +15,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true,}));
 
-app.get('/api/v1', (request, response) => {
+app.get('/api/v1', (_request, response) => {
   response.json({ info: 'Saloon API V1' });
 });
 

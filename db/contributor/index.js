@@ -1,4 +1,5 @@
 const db = require('./query');
+const {validate} = require('../auth');
 //CONTRIBUTORS
 
 module.exports = app => {
@@ -10,9 +11,9 @@ module.exports = app => {
 
     //invite contributor
     //auth
-    app.post('/api/v1/contributor', (request, response) => {
+    app.post('/api/v1/contributor', validate, (request, response) => {
         const inviter_id = request.body.user_id;
-        const contributor_id = request.body.invite;
+        const contributor_username = request.body.invite;
         const convo_id = request.body.convo_id;
 
         db.authorize(convo_id, inviter_id, (err, res) => {
@@ -21,7 +22,7 @@ module.exports = app => {
                 throw err;
             }
             if(res) {
-                db.inviteContributor(convo_id, contributor_id, inviter_id, (err, _res) => {
+                db.inviteContributor(convo_id, contributor_username, inviter_id, (err, _res) => {
                     if(err) {
                         console.log("ERROR LOG: " + res);
                         throw err;
@@ -35,7 +36,7 @@ module.exports = app => {
     });
 
     //accept invite
-    app.put('/api/v1/contributor/:convo_id', (request, response) => {
+    app.put('/api/v1/contributor/:convo_id', validate, (request, response) => {
         const contributor_id = request.body.user_id;
         const convo_id = request.params.convo_id;
 

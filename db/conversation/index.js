@@ -1,4 +1,5 @@
 const db = require('./query');
+const {validate} = require('../auth');
 
 //CONVERSATIONS
 //for now users can not edit or delete conversations
@@ -6,7 +7,7 @@ const db = require('./query');
 module.exports = app => {
     //create conversation
     //auth
-    app.post('/api/v1/convo', (request, response) => {
+    app.post('/api/v1/convo', validate, (request, response) => {
         const title = request.body.title;
         const post = request.body.post;
         const user_id = request.body.user_id;
@@ -29,13 +30,13 @@ module.exports = app => {
                 console.log(res);
                 throw err;
             }
-            response.json(res);
+            return response.json(res);
         });
     });
 
     //vote on conversation
     //auth
-    app.put('/api/v1/convo/vote/:convo_id/:vote', (request, response) => {
+    app.put('/api/v1/convo/vote/:convo_id/:vote', validate, (request, response) => {
         //TODO: implement method
         response.end();
     });

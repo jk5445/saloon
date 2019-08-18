@@ -27,9 +27,7 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 					return serve(true, "user_id not returned");
 				}
 				
-				const user = {};
-				user.user_id = results.rows[0]['user_id'];
-				return serve(null, user);
+				serve(null, results.rows[0]['user_id']);
 			}
 		);
 	});
@@ -39,7 +37,7 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 //issue token
 function logIn (email, password, serve) {
 	db.query(
-		'SELECT password_hash FROM users WHERE email=$1',
+		'SELECT user_id, password_hash FROM users WHERE email=$1',
 		[email],
 		(error, results) => {
 			if (error) {
@@ -53,7 +51,8 @@ function logIn (email, password, serve) {
 				if(err){
 					return serve(err, "bcrypt compare failed");
 				}
-				return serve(null, res);
+				const user_id = results.rows[0]['user_id'];
+				return serve(null, user_id);
 			});
 		}
 	)

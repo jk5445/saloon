@@ -8,10 +8,10 @@ module.exports = {
 	authorize
 };
 
-function inviteContributor (convo_id, contributor_id, inviter_id, serve) {
+function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 	db.query(
-		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, $2, $3)',
-		[convo_id, contributor_id, inviter_id],
+		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, (SELECT user_id FROM users WHERE user_name=$2), $3)',
+		[convo_id, contributor_username, inviter_id],
 		(error, _results) => {
 	  		if(error){
 	  			return serve(error, "invite failed");

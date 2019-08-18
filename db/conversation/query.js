@@ -12,10 +12,10 @@ module.exports = {
 //however it may be better to split this up at the server level
 //title and post is verified by server
 function createConvo (user_id, title, post, serve) {
-	//create convo
+	//create convo;
 	const convo = {};
 	db.query(
-		'INSERT INTO  convo (title) VALUES ($1) RETURNING convo_id',
+		'INSERT INTO convo (title) VALUES ($1) RETURNING convo_id',
 		[title],
 		(error, results) => {
 			if(error) {
@@ -23,27 +23,27 @@ function createConvo (user_id, title, post, serve) {
 			}
 			convo.convo_id = results.rows[0]['convo_id'];
 
-			//add user as contributor
-			contributor.inviteContributor (convo.convo_id, user_id, user_id, (err, res) => {
-				if(err) {
-					return (err, res);
-				}
-				//accept invite
-				contributor.acceptInvite (convo.convo_id, user_id, (err, res) => {
-					if(err) {
-						return (err, res);
+			db.query(
+				'INSERT INTO contributor (convo_id, contributor_id, inviter_id, accepted_at) VALUES ($1, $2, $2, NOW())',
+				[convo.convo_id, user_id],
+				(error, _results) => {
+					if (error){
+						return serve(error, "insert contributor failed");
 					}
+
 					//create first post
-
 					createPost (convo.convo_id, user_id, post, (err, res) => {
-						if(err) {
-							return (err, res);;
-						}
-
-						return serve (null, convo);
+					if(err) {
+						return (err, res);;
+					}
+		
+					return serve (null, convo);
 					});
-				});
-			});
+
+				}
+			)
+			
+			
 		}
 	);
 }
