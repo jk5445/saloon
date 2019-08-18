@@ -71,6 +71,7 @@ function getConvo (convo_id, serve) {
 				return serve(error, "select convo failed");
 			}
 			const convo = {};
+			convo.convo_id = convo_id
 			convo.title = results.rows[0]['title'];
 			convo.contributorCount = results.rows[0]['contributors'];
 			convo.postCount = results.rows[0]['posts'];
