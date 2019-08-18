@@ -24,12 +24,14 @@ function validate (request, response, next){
 	const token = request.headers['authorization']
 
 	request.body.user_id = null
-	if (typeof token === undefined){
+	if (token == undefined){
+		console.log("token undefined")
 		return response.sendStatus(401)
 	}
 
 	jwt.verify(token, secret, {issuer: issuer}, (err, decoded) => {
 		if (err){
+			console.log(err)
 			return response.sendStatus(401)
 		}
 
