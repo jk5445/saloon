@@ -1,4 +1,5 @@
 const db = require('./query');
+const {validate} = require('../auth');
 
 //CONVERSATIONS
 //for now users can not edit or delete conversations
@@ -29,7 +30,7 @@ module.exports = app => {
                 console.log(res);
                 throw err;
             }
-            response.json(res);
+            return response.json(res);
         });
     });
 
