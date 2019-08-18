@@ -1,5 +1,4 @@
 const db = require('../queries');
-const contributor = require('../contributor/query');
 const {getPosts, createPost} = require('../post/query');
 
 module.exports = {
@@ -33,11 +32,11 @@ function createConvo (user_id, title, post, serve) {
 
 					//create first post
 					createPost (convo.convo_id, user_id, post, (err, res) => {
-					if(err) {
-						return (err, res);;
-					}
-		
-					return serve (null, convo);
+						if(err) {
+							return (err, res);;
+						}
+			
+						return serve (null, convo);
 					});
 
 				}
@@ -60,9 +59,12 @@ function getConvo (convo_id, serve) {
 			}
 		}
 	);
-
+	const query = "SELECT convo.*, users.user_name " +  
+	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
+	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
+	"WHERE convo.convo_id=$1";
 	db.query(
-		'SELECT * FROM convo WHERE convo_id=$1',
+		query,
 		[convo_id],
 		(error, results) => {
 			if (error) {
@@ -75,23 +77,21 @@ function getConvo (convo_id, serve) {
 			convo.views = results.rows[0]['views'];
 			convo.votes = results.rows[0]['votes'];
 			convo.commentCount = results.rows[0]['comments'];
-			
-			//get contributors
-			contributor.getContributors(convo_id, (err, res) => {
+
+			let i;
+			convo.contributors = [];
+			for(i = 0; i < results.rowCount; i++){
+				convo.contributors.push(results.rows[i]['user_name']);
+			}
+
+			//get posts
+			getPosts(convo_id, (err, res) => {
 				if (err) {
 					return serve(err, res);
 				}
-				convo.contributors = res;
+				convo.posts = res;
 
-				//get posts
-				getPosts(convo_id, (err, res) => {
-					if (err) {
-						return serve(err, res);
-					}
-					convo.posts = res;
-
-					return serve (null, convo);
-				});
+				return serve (null, convo);
 			});
 		}
 	);
