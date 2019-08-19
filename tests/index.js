@@ -27,7 +27,7 @@ axios({
         first_name: 'Judah',
         last_name: 'Kishk',
         email: 'email@saloon.org',
-        password: 'pass'
+        password: 'password'
     }
 }).then(res => {
         token1 = res.data;
@@ -44,7 +44,7 @@ axios({
         first_name: 'Judah',
         last_name: 'Judah',
         email: 'liame@saloon.org',
-        password: 'pass'
+        password: 'password'
     }
 }).then(res => {
         token2 = res.data;
@@ -57,7 +57,7 @@ axios({
     url: url,
     data: {
         email: 'email@saloon.org',
-        password: 'pass'
+        password: 'password'
     }
 }).then(res => { 
     token1 = res.data;
