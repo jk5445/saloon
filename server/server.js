@@ -7,6 +7,7 @@ const user = require('../db/user');
 const conversation = require('../db/conversation');
 const post = require('../db/post');
 const contributor = require('../db/contributor');
+const feed = require('../db/feed');
 //const comment = require('../db/comment');
 
 const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
@@ -28,6 +29,8 @@ conversation(app);
 post(app);
 //Contributors
 contributor(app);
+//Feed
+feed(app);
 //Comments
 //comment(app);
 

@@ -154,10 +154,34 @@ axios({
     }
 }).then(res => { console.log("\npost successful");
 
+url = "http://localhost:3000/api/v1/convo"
+console.log("\npost: " + url)
+axios({
+    method: 'post',
+    url: url,
+    headers: {
+        authorization: token2
+    },
+    data: {
+        title: 'second saloon convo',
+        post: 'whoooooooooooo!'
+    }
+})
+.then( res => {console.log("post convo 2 succesful");
+
 url = "http://localhost:3000/api/v1/convo" + "/" + convo_id;
 console.log("\nget: " + url);
-axios.get(url).then(
-    res => { console.log(res.data);
+axios.get(url)
+.then( res => { console.log(res.data);
+
+url = "http://localhost:3000/api/v1/feed";
+console.log("\nget: " + url);
+axios.get(url)
+.then( res => {
+    let i = 0;
+    for(i; i < res.data.convos.length; i++){
+        console.log(res.data.convos[i])
+    }
 
         db.query(
             'DELETE FROM contributor; DELETE FROM post; DELETE FROM convo; DELETE FROM users', [], (error, _results) => {
@@ -170,9 +194,12 @@ axios.get(url).then(
                 }
             }
         );
-})
 },
 
+
+    err => console.log(err))},
+    err => console.log(err))},
+    err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},

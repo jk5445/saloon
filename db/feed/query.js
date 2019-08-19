@@ -7,10 +7,7 @@ module.exports = {
 }
 
 function getFeed(batch, serve) {
-    const query = "SELECT convo.* users.user_name " + 
-        "FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
-        "INNER JOIN users ON users.user_id=contributor.contributor_id " + 
-        "ORDER BY convo.votes DECSCENDING"
+    const query = "SELECT * FROM convo ORDER BY votes DESC"
     db.query(
         query, [], (error, results) => {
             if(error){
@@ -21,7 +18,9 @@ function getFeed(batch, serve) {
 
             let i = (batch - 1) * 10
             const cap = i + 10
-            for(; i < cap && i < results.rowCount; i++){
+            let count = 0
+            const limit = (results.rowCount < i + 10) ? results.rowCount - i : 10
+            for(i; i < limit; i++){
                 const convo = {}
                 const record = results.rows[i]
                 convo.convo_id = record['convo_id']
@@ -38,7 +37,8 @@ function getFeed(batch, serve) {
                     }
                     convo.contributors = response
                     convos.push(convo)
-                    if(i >= cap || i >= results.rowCount){
+                    count++;
+                    if(count >= limit){
                         const res = {}
                         res.convos = convos
                         return serve(null, res)
