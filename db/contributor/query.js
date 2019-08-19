@@ -1,12 +1,12 @@
-const db = require('../queries');
-const user = require('../user/query.js');
+const db = require('../queries')
+const user = require('../user/query.js')
 
 module.exports = {
 	inviteContributor, 
 	acceptInvite, 
 	getContributors,
 	authorize
-};
+}
 
 function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 	db.query(
@@ -14,11 +14,11 @@ function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 		[convo_id, contributor_username, inviter_id],
 		(error, _results) => {
 	  		if(error){
-	  			return serve(error, "invite failed");
+	  			return serve(error, "invite failed")
 			}
-			return serve(null, true);
+			return serve(null, true)
 		}
-	);
+	)
 }
 
 function acceptInvite (convo_id, contributor_id, serve) {
@@ -27,51 +27,44 @@ function acceptInvite (convo_id, contributor_id, serve) {
 		[convo_id, contributor_id],
 		(error, _results) => {
 	  		if(error){
-	  			return serve(error, "accept failed");
+	  			return serve(error, "accept failed")
 			}
 			db.query(
 				'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1',
 				[convo_id],
 				(error, _results) => {
 					if(error){
-						return serve(error, "count failed");
+						return serve(error, "count failed")
 					}
-					return serve(null, true);
+					return serve(null, true)
 				}
-			);
+			)
 		}
-	);
+	)
 }
 
 function getContributors (convo_id, serve) {
-	db.query(
-		'SELECT contributor_id FROM contributor WHERE convo_id=$1 and accepted_at IS NOT NULL',
-		[convo_id],
+	const query = "SELECT users.user_name FROM contributor " + 
+		"INNER JOIN users ON users.user_id=contributor.contributor_id " + 
+		"WHERE convo_id=$1 and accepted_at IS NOT NULL"
+	db.query( 
+		query, [convo_id], 
 		(error, results) => {
 			if (error) {
 				return serve(error, "select contributor fail");
 			} else if (results.rowCount < 1){
 				return serve(true, "convo has no contributors");
 			}
-			let i;
-			let count = 0;
-			let contributors = [];
-			for(i = 0; i < results.rowCount; i++) {
-				const contributor_id = results.rows[i]["contributor_id"];
-				user.getUserName(contributor_id, (err, res) => {
-					if(err){
-						return serve(err, res);
-					}
-					contributors.push(res);
-					count++;
 
-					if(count >= results.rowCount){
-						return serve(null, contributors);
-					}
-				});
+			let i = 0
+			let contributors = [];
+			for(i; i < results.rowCount; i++) {
+				const contributorName = results.rows[i]["user_name"];
+				contributors.push(contributorName)
 			}
+			return serve(null, contributors);
 		}
-	);
+	)
 }
 
 function authorize (convo_id, contributor_id, serve) {
@@ -81,11 +74,11 @@ function authorize (convo_id, contributor_id, serve) {
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
-				return serve(error, "select contributor failed");
+				return serve(error, "select contributor failed")
 			}
 			//true if record is found
-			const authorized = (results.rowCount > 0);
-			return serve(null, authorized);
+			const authorized = (results.rowCount > 0)
+			return serve(null, authorized)
 		}
-	);
+	)
 }
