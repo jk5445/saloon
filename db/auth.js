@@ -1,9 +1,10 @@
 module.exports = {
 	createToken,
-	validate
+	authenticate
 }
 
 const jwt = require('jsonwebtoken')
+const {isJWT} = require('validator')
 
 const secret = process.env.JWT_SECRET
 const expIn = process.env.JWT_EXP
@@ -20,8 +21,12 @@ function createToken (user_id, response){
 	})
 }
 
-function validate (request, response, next){
+function authenticate (request, response, next){
 	const token = request.headers['authorization']
+
+	if(!isJWT(token)){
+		return response.sendStatus(401)
+	}
 
 	request.body.user_id = null
 	if (token == undefined){

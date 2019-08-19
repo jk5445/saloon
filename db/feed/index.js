@@ -1,9 +1,31 @@
 const db = require('./query')
+const validate = require('validator')
 
 module.exports = app => {
     //get feed
     app.get('/api/v1/feed', (request, response) => {
-        const batch = (request.body.batch == null) ? 1 : request.body.batch;
+        let batch = request.body.batch || 1;
+
+        if(!validate.isInt(batch + '')){
+            batch = 1;
+        }
+
+        db.getFeed(batch, (err, res) => {
+            if(err) {
+                console.log(res)
+                throw err
+            }
+            return response.json(res)
+        })
+    })
+
+    app.get('/api/v1/feed/:tag', (request, response) => {
+        let batch = request.body.batch || 1;
+
+        if(!validate.isInt(batch + '')){
+            batch = 1;
+        }
+        
         db.getFeed(batch, (err, res) => {
             if(err) {
                 console.log(res)

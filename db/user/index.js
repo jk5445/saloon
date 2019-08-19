@@ -1,5 +1,6 @@
 const db = require('./query')
-const {createToken, validate} = require('../auth')
+const {createToken, authenticate} = require('../auth')
+const validate =require('validator')
 
 //USERS
 
@@ -12,6 +13,23 @@ module.exports = app => {
         const last_name = request.body.last_name;
         const email = request.body.email;
         const password = request.body.password;
+
+        if(!validate.isLength(user_name, {min: 5, max: 20})){
+            return response.staus(400).send("Username must contain at least 5 characters and at most 20 characters");
+        }
+        if(!validate.isLength(first_name, {min: 5, max: 20})){
+            return response.staus(400).send("First name must contain at least 5 characters and at most 20 characters");
+        }
+        if(!validate.isLength(last_name, {min: 5, max: 20})){
+            return response.staus(400).send("Last name must contain at least 5 characters and at most 20 characters");
+        }
+        if(!validate.isEmail(email) || !validate.isLength(email, {max: 255})){
+            return response.status(404).send("Invalid email");
+        }
+        if(!validate.isLength(password, {min: 8, max: 50})){
+            return response.status(400).send("Password length must be between 8 and 50 characters");
+        }
+
 
         db.createUser(user_name, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
@@ -29,6 +47,13 @@ module.exports = app => {
         const email = request.body.email;
         const password = request.body.password;
 
+        if(!validate.isEmail(email) || !validate.isLength(email, {max: 255})){
+            return response.status(404).send("Invalid email");
+        }
+        if(!validate.isLength(password, {min: 8, max: 50})){
+            return response.status(400).send("Password length must be between 8 and 50 characters");
+        }
+
         db.logIn(email, password, (err, user_id) => {
             if(err) {
                 console.log(user_id);
@@ -45,7 +70,7 @@ module.exports = app => {
 
     //get user info
     //auth
-    app.get('/api/v1/user', validate, (request, response) => {
+    app.get('/api/v1/user', authenticate, (request, response) => {
         const user_id = request.body.user_id;
         db.getUserById(user_id, (err, res) => {
             if(err){
@@ -58,14 +83,14 @@ module.exports = app => {
 
     //edit user
     //auth
-    app.put('/api/v1/user', validate, (request, response) => {
+    app.put('/api/v1/user', authenticate, (request, response) => {
         //TODO: implement method
         response.end();
     });
 
     //delete user - not necessary
     //auth
-    app.delete('/api/v1/user', validate, (request, response) => {
+    app.delete('/api/v1/user', authenticate, (request, response) => {
         //TODO: implement method
         response.end();
     });

@@ -1,5 +1,6 @@
-const db = require('./query');
-const {validate} = require('../auth')
+const db = require('./query')
+const {authenticate} = require('../auth')
+const validate = require('validator')
 
 //Posts
 //subcomponents of conversations
@@ -8,10 +9,17 @@ const {validate} = require('../auth')
 module.exports = app => {
     //create post
     //auth
-    app.post('/api/v1/post', validate, (request, response) => {
+    app.post('/api/v1/post', authenticate, (request, response) => {
         const user_id = request.body.user_id;
         const convo_id = request.body.convo_id;
         const post = request.body.post;
+
+        if(!validate.isInt(convo_id + '')) {
+            return response.status(400).send("invalid convo_id");
+        }
+        if(!validate.isLength(post, {min: 10, max: undefined})) {
+            return response.status(400).send("Post must contain at least 10 characters");
+        }
 
         let authorized = false;
         db.authorize(convo_id, user_id, (err, res) => {

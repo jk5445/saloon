@@ -1,5 +1,6 @@
 const db = require('./query');
-const {validate} = require('../auth');
+const {authenticate} = require('../auth');
+const validate = require('validator');
 //CONTRIBUTORS
 
 module.exports = app => {
@@ -11,10 +12,18 @@ module.exports = app => {
 
     //invite contributor
     //auth
-    app.post('/api/v1/contributor', validate, (request, response) => {
+    app.post('/api/v1/contributor', authenticate, (request, response) => {
         const inviter_id = request.body.user_id;
         const contributor_username = request.body.invite;
         const convo_id = request.body.convo_id;
+
+        if(!validate.isAlphanumeric(contributor_username)){
+            return response.status(400).send("Invalid contributor username");
+        }
+
+        if(!validate.isInt(convo_id + '')){
+            return response.status(400).send("Invalid convo_id");
+        }
 
         db.authorize(convo_id, inviter_id, (err, res) => {
             if (err){
@@ -27,25 +36,29 @@ module.exports = app => {
                         console.log("ERROR LOG: " + res);
                         throw err;
                     }
-                    response.status(201).end();
+                    return response.status(201).end();
                 });
             } else {
-                response.status(400).end();
+                return response.status(400).end();
             }
         });
     });
 
     //accept invite
-    app.put('/api/v1/contributor/:convo_id', validate, (request, response) => {
+    app.put('/api/v1/contributor/:convo_id', authenticate, (request, response) => {
         const contributor_id = request.body.user_id;
         const convo_id = request.params.convo_id;
+
+        if(!validate.isInt(convo_id + '')){
+            return response.status(400).send("Invalid convo_id");
+        }
 
         db.acceptInvite(convo_id, contributor_id, (err, res) => {
             if(err) {
                 console.log("ERROR LOG: " + res);
                 throw err;
             }
-            response.status(200).end();
+            return response.status(200).end();
         });
     });
 }
