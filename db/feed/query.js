@@ -17,19 +17,11 @@ function getFeed(batch, serve) {
             convos = []
 
             let i = (batch - 1) * 10
-            const cap = i + 10
-            let count = 0
-            const limit = (results.rowCount < i + 10) ? results.rowCount - i : 10
+            let count = i
+            const limit = (results.rowCount < i + 10) ? results.rowCount : 10 + i
             for(i; i < limit; i++){
-                const convo = {}
-                const record = results.rows[i]
-                convo.convo_id = record['convo_id']
-                convo.title = record['title']
-                convo.views = record['views']
-                convo.votes = record['votes']
-                convo.comments = record['comments']
-                convo.posts = record['posts']
-                convo.last_post_at = record['last_post_at']
+                let convo = results.rows[i]
+                convo.contributorCount = convo.contributors
 
                 getContributors(convo.convo_id, (error, response) => {
                     if(error){
@@ -39,9 +31,7 @@ function getFeed(batch, serve) {
                     convos.push(convo)
                     count++;
                     if(count >= limit){
-                        const res = {}
-                        res.convos = convos
-                        return serve(null, res)
+                        return serve(null, {convos: convos})
                     }
                 })
             }

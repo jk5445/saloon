@@ -12,13 +12,14 @@ module.exports = app => {
 
         db.getFeed(batch, (err, res) => {
             if(err) {
-                console.log(res)
-                throw err
+                console.log(err)
+                return response.status(400).send(res)
             }
             return response.json(res)
         })
     })
 
+    /*
     app.get('/api/v1/feed/:tag', (request, response) => {
         let batch = request.body.batch || 1;
 
@@ -34,4 +35,5 @@ module.exports = app => {
             return response.json(res)
         })
     })
+    */
 }
