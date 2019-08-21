@@ -3,7 +3,7 @@ const {getContributors} = require('../contributor/query')
 
 module.exports = {
     getFeed,
-    getFeedByTag
+    //getFeedByTag
 }
 
 function getFeed(batch, serve) {
@@ -39,6 +39,8 @@ function getFeed(batch, serve) {
     )
 }
 
+/*
 function getFeedByTag(tag, batch, serve){
     return serve(null, null)
 }
+*/
