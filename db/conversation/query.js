@@ -11,40 +11,49 @@ module.exports = {
 //however it may be better to split this up at the server level
 //title and post is verified by server
 function createConvo (user_id, title, post, serve) {
-	//create convo;
-	const convo = {};
-	db.query(
-		'INSERT INTO convo (title) VALUES ($1) RETURNING convo_id',
-		[title],
-		(error, results) => {
-			if(error) {
-				return serve(error, "insert convo failed");
-			}
-			convo.convo_id = results.rows[0]['convo_id'];
+	db.getClient((error, client, done) => {
+		if(error) return serve(error, "Error connecting client")
 
-			db.query(
-				'INSERT INTO contributor (convo_id, contributor_id, inviter_id, accepted_at) VALUES ($1, $2, $2, NOW())',
-				[convo.convo_id, user_id],
-				(error, _results) => {
-					if (error){
-						return serve(error, "insert contributor failed");
+		const abort = err => {
+			if(err){
+				console.error("Error in transaction", err)
+				client.query('ROLLBACK', err => {
+					if(err){
+						console.error("Error rolling back client", err)
 					}
-
-					//create first post
-					createPost (convo.convo_id, user_id, post, (err, res) => {
-						if(err) {
-							return (err, res);;
-						}
-			
-						return serve (null, convo);
-					});
-
-				}
-			)
-			
-			
+					done()
+				})
+			}
+			return !!err
 		}
-	);
+
+		client.query('BEGIN', err => {
+			if(abort(err)) return serve(err, "Error beginning transaction")
+
+			let query = 'INSERT INTO convo (title, last_post_at, posts, contributors) VALUES ($1, NOW(), 1, 1) RETURNING convo_id'
+			client.query(query, [title], (error, results) => {
+				if(abort(error)) return serve(error, "Error inserting convo")
+				const convo = {}
+				convo.convo_id = results.rows[0]['convo_id']
+				
+				query = 'INSERT INTO contributor (convo_id, contributor_id, inviter_id, accepted_at) VALUES ($1, $2, $2, NOW())'
+				client.query(query, [convo.convo_id, user_id], error => {
+					if(abort(error)) return serve(error, "Error inserting contributor")
+
+					query = 'INSERT INTO post (convo_id, contributor_id, post) VALUES ($1, $2, $3)'
+					client.query(query, [convo.convo_id, user_id, post], error => {
+						if(abort(error)) return serve(error, "Error inserting post")
+
+						client.query('COMMIT', err => {
+							if(abort(err)) return serve(err, "Error commiting transaction")
+							done()
+							return serve(null, convo)
+						})
+					})
+				})
+			})
+		})
+	})
 }
 
 //returns an object containing all the convo information

@@ -22,25 +22,42 @@ function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 }
 
 function acceptInvite (convo_id, contributor_id, serve) {
-	db.query(
-		'UPDATE contributor SET accepted_at = NOW() WHERE convo_id = $1 AND contributor_id = $2',
-		[convo_id, contributor_id],
-		(error, _results) => {
-	  		if(error){
-	  			return serve(error, "accept failed")
-			}
-			db.query(
-				'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1',
-				[convo_id],
-				(error, _results) => {
-					if(error){
-						return serve(error, "count failed")
+	db.getClient((err, client, done) => {
+		if(err) return serve(error, "Error connecting client")
+
+		const abort = err => {
+			if(err){
+				console.error("Error in transaction", err)
+				client.query('ROLLBACK', err => {
+					if(err){
+						console.error("Error rolling back client", err)
 					}
-					return serve(null, true)
-				}
-			)
+					done()
+				})
+			}
+			return !!err
 		}
-	)
+
+		client.query('BEGIN', err => {
+			if(abort(err)) return serve(err, "Error beginning transaction")
+		
+			let query = 'UPDATE contributor SET accepted_at = NOW() WHERE convo_id = $1 AND contributor_id = $2'
+			client.query(query, [convo_id, contributor_id], (error, _results) => {
+				if(abort(error)) return serve(error, "Error accepting invite")
+				
+				query = 'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1'
+				client.query(query, [convo_id], (error, _results) => {
+					if(abort(error)) return serve(error, "Error updating contributor count")
+
+					client.query('COMMIT', err => {
+						if(abort(err)) return serve(err, "Error commiting transaction")
+						done()
+						return serve(null, true)
+					})
+				})
+			})
+		})
+	})
 }
 
 function getContributors (convo_id, serve) {
@@ -51,7 +68,7 @@ function getContributors (convo_id, serve) {
 		query, [convo_id], 
 		(error, results) => {
 			if (error) {
-				return serve(error, "select contributor fail");
+				return serve(error, "Error selecting contributor");
 			} else if (results.rowCount < 1){
 				return serve(true, "convo has no contributors");
 			}

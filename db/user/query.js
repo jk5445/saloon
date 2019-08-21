@@ -27,7 +27,7 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 					return serve(true, "user_id not returned");
 				}
 				
-				serve(null, results.rows[0]['user_id']);
+				serve(error, results.rows[0]['user_id']);
 			}
 		);
 	});
@@ -52,7 +52,7 @@ function logIn (email, password, serve) {
 					return serve(err, "bcrypt compare failed");
 				}
 				const user_id = results.rows[0]['user_id'];
-				return serve(null, user_id);
+				return serve(err, user_id);
 			});
 		}
 	)
@@ -69,13 +69,9 @@ function getUserById (user_id, serve) {
 		} else if (results.rowCount < 1) {
 			return serve(true, "user_id " + user_id + " is not valid");
 		}
-	
-		const user = {};
-		user.user_name = results.rows[0]['user_name'];
-		user.first_name = results.rows[0]['first_name'];
-		user.last_name = results.rows[0]['last_name'];
-		user.email = results.rows[0]['email'];
-		return serve(null, user);
+
+		const user = results.rows[0]
+		return serve(error, user);
   	  }
   	);
 }
