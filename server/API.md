@@ -14,9 +14,7 @@ request body
 &nbsp;&nbsp;&nbsp;&nbsp;
 "email": "email@fake.com",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"password1": "password",  
-&nbsp;&nbsp;&nbsp;&nbsp;
-"password2": "password"  
+"password": "password",  
 }
 
 response: (user will get an email to confirm email address before they can get a token)
@@ -42,50 +40,47 @@ request Authorization header
 response body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"user_name": "user",  
+    "user_name": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"first_name": "first",  
+    "first_name": "first",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"last_name": "last",  
+    "last_name": "last",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"email": "email@fake.com",  
+    "email": "email@fake.com",  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"conversation_joined_1": { //for joined conversations  
+    "convos_joined": [  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"convo_id":"123",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"title": "Title"  
-&nbsp;&nbsp;&nbsp;&nbsp;
-},  
-&nbsp;&nbsp;&nbsp;&nbsp;
-"conversation_invited_1": { //for joined conversations  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"convo_id":"123",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"title": "Title"  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributors": {  
+        {  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor_1": "contributor",  
+            "convo_id":"123",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"contributor_2": "contributor",  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-...  
+            "title": "Title"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "contributors": ["contributor1", "contributor2", ...]  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}  
+        },  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ...  
 &nbsp;&nbsp;&nbsp;&nbsp;
-},  
+    ],  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"comments": {  
+    "convos_invited": [  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"convo_id":"convo",  
+        {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "convo_id":"123",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "title": "Title"  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "contributors": ["contributor1", "contributor2", ...]  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"title": "Title",  
+        },  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"comment": "commentText",  
+        ...  
 &nbsp;&nbsp;&nbsp;&nbsp;
-}  
+    ],  
 }
+//include comments?
 
 **edit user info**
 *not a priority*  
@@ -154,11 +149,11 @@ get */api/v1/feed*
 
 **Get Feed by tag**
 *secondary priority*  
-get */api/v1/feed/:tag_id*
+get */api/v1/feed/bytag/:tag_id*
 
 **Get Feed by contributor**
 *secondary priority*  
-get */api/v1/feed/:contributor_id*
+get */api/v1/feed/bycontributor/:contributor_id*
 
 
 ## Conversation
