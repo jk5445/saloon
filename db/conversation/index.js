@@ -24,7 +24,7 @@ module.exports = app => {
         db.createConvo(user_id, title, post, (err, res) => {
             if(err){
                 console.log(res);
-                throw(err);
+                return response.status(400).send('Query failed')
             } else if (res){
                 return response.json(res);
             }
@@ -34,15 +34,16 @@ module.exports = app => {
     //get conversation
     app.get('/api/v1/convo/:convo_id', (request, response) => {
         const convo_id = request.params.convo_id;
+        const user_id = request.body.user_id
 
         if(!validate.isInt(convo_id + '')){
             return response.status(400).send("Invalid convo_id")
         }
 
-        db.getConvo(convo_id, (err, res) => {
+        db.getConvo(convo_id, user_id, (err, res) => {
             if(err){
-                console.log(res);
-                throw err;
+                console.error(res);
+                return response.status(400).send('Query failed')
             }
             return response.json(res);
         });
@@ -50,8 +51,25 @@ module.exports = app => {
 
     //vote on conversation
     //auth
-    app.put('/api/v1/convo/vote/:convo_id/:vote', authenticate, (request, response) => {
-        //TODO: implement method
-        response.end();
-    });
+    app.put('/api/v1/convo/:convo_id/vote/:vote', authenticate, (request, response) => {
+        const vote = request.params.vote
+        const convo_id = request.params.convo_id
+        const user_id = request.body.user_id
+        
+        if(!validate.isInt(vote + '', {min: -1, max: 1})){
+            return response.status(400).send('Invalid vote')
+        }
+        if(!validate.isInt(convo_id + '')){
+            return response.status(400).send("Invalid convo_id")
+        }
+
+        db.vote(convo_id, user_id, vote, (err, res) => {
+            if(err){
+                console.error(res, err)
+                return response.status(400).send('Query failed')
+            }
+
+            return response.status(200).send(res)
+        })
+    })
 }

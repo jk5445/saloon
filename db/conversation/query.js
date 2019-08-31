@@ -3,7 +3,8 @@ const {getPosts, createPost} = require('../post/query');
 
 module.exports = {
 	createConvo, 
-	getConvo 
+	getConvo,
+	vote 
 };
 
 //to create a conversation a user must provide a title, and a post
@@ -58,7 +59,7 @@ function createConvo (user_id, title, post, serve) {
 
 //returns an object containing all the convo information
 //see api documentation for structure
-function getConvo (convo_id, serve) {
+function getConvo (convo_id, user_id, serve) {
 	db.query(
 		'UPDATE convo SET views = views + 1 WHERE convo_id = $1',
 		[convo_id],
@@ -68,6 +69,24 @@ function getConvo (convo_id, serve) {
 			}
 		}
 	);
+
+	const convo = {}
+	convo.vote = 0
+
+	if(user_id){
+		db.query(
+			'SELECT vote FROM convo_vote WHERE user_id = $1 AND convo_id = $2 ORDER BY vote_at DESC',
+			[user_id, convo_id],
+			(error, results) => {
+				if(error) console.error('Error getting vote', error)
+				
+				if (results.rowCount > 0){
+					convo.vote = results.rows[0]['vote']
+				}
+			}
+		)
+	}
+
 	const query = "SELECT convo.*, users.user_name " +  
 	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
 	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
@@ -79,7 +98,6 @@ function getConvo (convo_id, serve) {
 			if (error) {
 				return serve(error, "select convo failed");
 			}
-			const convo = {};
 			convo.convo_id = convo_id
 			convo.title = results.rows[0]['title'];
 			convo.contributorCount = results.rows[0]['contributors'];
@@ -105,4 +123,56 @@ function getConvo (convo_id, serve) {
 			});
 		}
 	);
+}
+
+function vote(convo_id, user_id, vote, serve){
+
+	db.getClient((error, client, done) => {
+		if(error) return serve(error, "Error connecting client")
+
+		const abort = err => {
+			if(err){
+				console.error("Error in transaction", err)
+				client.query('ROLLBACK', err => {
+					if(err){
+						console.error("Error rolling back client", err)
+					}
+					done()
+				})
+			}
+			return !!err
+		}
+
+		client.query('BEGIN', err => {
+			if(abort(err)) return serve (err, 'Error beginning transaction')
+
+			let query = 'SELECT vote FROM convo_vote ' + 
+				'WHERE convo_id = $1 AND user_id = $2 ' + 
+				'ORDER BY vote_at DESC'
+			client.query(query, [convo_id, user_id], (error, results) => {
+				if(abort(error)) return serve (error, 'Error selecting previous vote')
+				
+				let oldVote = 0
+				if(results.rowCount > 0) oldVote = results.rows[0]['vote']
+
+				query = 'INSERT INTO convo_vote ' + 
+					'(convo_id, user_id, vote) VALUES ($1, $2, $3)'
+				client.query(query, [convo_id, user_id], error => {
+					if(abort(error)) return serve(error, 'Error inserting vote')
+
+					let voteDiff = vote - oldVote
+					query = 'UPDATE convo SET votes = votes - $2 WHERE convo_id = $1'
+					client.query(query, [convo_id, voteDiff], error => {
+						if(abort(error)) return serve(error, 'Error updating vote count')
+
+						client.query('COMMIT', err => {
+							if(abort(err)) return serve(err, "Error commiting transaction")
+							done()
+							return serve(null, true)
+						})
+					})
+				})
+			})
+		})
+	})
 }

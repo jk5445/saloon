@@ -180,6 +180,7 @@ response body
 
 **Get conversation**  
 get */api/v1/convo/:convo_id*
+authentication header if logged in
 
 response body  
 {  
@@ -213,13 +214,19 @@ response body
     ],  
 &nbsp;&nbsp;&nbsp;&nbsp;
     "commentCount": "count",  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    //if logged in (authentication header passed) users vote will be returned  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    //1, 0, or -1 for upvote, novote, and downvote respectively  
+&nbsp;&nbsp;&nbsp;&nbsp;
+    "vote": "1",  
 }
 
 **Vote on conversation**  
-put */api/v1/convo/vote/:convo_id/:vote*
+put */api/v1/convo/:convo_id/vote/:vote*
 
 request Authorization header  
-:vote is either "up" or "down"
+:vote is 1, 0, or -1 for upvote, novote, and downvote respectively
 
 ## Posts 
 subcomponents of conversations
@@ -280,11 +287,31 @@ response body  //needs thought
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             "user_name": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            "comment": "commentText",  
+            "comment": "comment text",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            "votes": "vote count",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             "time": "",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            "prev_id": "previousCommentId"  //null for base comment  
+            "replies": [  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "comment_id": "comment_id",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "user_name": "user",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "comment": "comment text",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "votes": "vote count",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "time": "",  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    "replies": [...]  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                }, ...  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            ]  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         },  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -318,7 +345,7 @@ request body
 }
 
 **Vote on comment**
-put */api/v1/comment/vote/:comment_id/:vote'*
+put */api/v1/comment/:comment_id/vote/:vote'*
 
 Request Authorization header  
 :vote is up or down
