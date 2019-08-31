@@ -1,5 +1,5 @@
 const db = require('./query');
-const {authenticate} = require('../auth');
+const {authenticate, optAuth} = require('../auth');
 const validate = require('validator');
 
 //CONVERSATIONS
@@ -23,16 +23,15 @@ module.exports = app => {
 
         db.createConvo(user_id, title, post, (err, res) => {
             if(err){
-                console.log(res);
+                console.error(res, err);
                 return response.status(400).send('Query failed')
-            } else if (res){
-                return response.json(res);
             }
+            return response.json(res);
         });
     });
 
     //get conversation
-    app.get('/api/v1/convo/:convo_id', (request, response) => {
+    app.get('/api/v1/convo/:convo_id', optAuth, (request, response) => {
         const convo_id = request.params.convo_id;
         const user_id = request.body.user_id
 
@@ -42,7 +41,7 @@ module.exports = app => {
 
         db.getConvo(convo_id, user_id, (err, res) => {
             if(err){
-                console.error(res);
+                console.error(res, err);
                 return response.status(400).send('Query failed')
             }
             return response.json(res);

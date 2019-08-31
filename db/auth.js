@@ -1,6 +1,7 @@
 module.exports = {
 	createToken,
-	authenticate
+	authenticate,
+	optAuth
 }
 
 const jwt = require('jsonwebtoken')
@@ -30,16 +31,30 @@ function authenticate (request, response, next){
 
 	request.body.user_id = null
 	if (token == undefined){
-		console.log("token undefined")
 		return response.sendStatus(401)
 	}
 
 	jwt.verify(token, secret, {issuer: issuer}, (err, decoded) => {
 		if (err){
-			console.log(err)
 			return response.sendStatus(401)
 		}
 
+		request.body.user_id = decoded['sub']
+		return next()
+	})
+}
+
+function optAuth (request, response, next){
+	const token = request.headers['authorization']
+	request.body.user_id = null
+
+	if(!isJWT(token) || token == undefined){
+		return next()
+	}
+
+	jwt.verify(token, secret, {issuer: issuer}, (err, decoded) => {
+		if (err) return next()
+		
 		request.body.user_id = decoded['sub']
 		return next()
 	})
