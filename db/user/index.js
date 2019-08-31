@@ -33,8 +33,7 @@ module.exports = app => {
 
         db.createUser(user_name, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
-                console.log(user_id);
-                throw err;
+                return response.status(400).send('Query failed')
             }
 
             createToken(user_id, response);
@@ -48,7 +47,7 @@ module.exports = app => {
         const password = request.body.password;
 
         if(!validate.isEmail(email) || !validate.isLength(email, {max: 255})){
-            return response.status(404).send("Invalid email");
+            return response.status(400).send("Invalid email");
         }
         if(!validate.isLength(password, {min: 8, max: 50})){
             return response.status(400).send("Password length must be between 8 and 50 characters");
@@ -56,8 +55,7 @@ module.exports = app => {
 
         db.logIn(email, password, (err, user_id) => {
             if(err) {
-                console.log(user_id);
-                throw err;
+                return response.status(400).send("Log in failed")
             }
 
             if(user_id){
@@ -71,18 +69,18 @@ module.exports = app => {
     //get user info
     //auth
     app.get('/api/v1/user', authenticate, (request, response) => {
-        const user_id = request.body.user_id;
+        const user_id = request.body.user_id
         db.getUserById(user_id, (err, res) => {
             if(err){
-                console.log(res);
-                throw err;
+                return response.status(400).send("Get user failed")
             }
-            response.status(200).json(res);
+            return response.status(200).json(res);
         })
-    });
+    })
 
     //edit user
     //auth
+    /*
     app.put('/api/v1/user', authenticate, (request, response) => {
         //TODO: implement method
         response.end();
@@ -94,4 +92,5 @@ module.exports = app => {
         //TODO: implement method
         response.end();
     });
+    */
 }

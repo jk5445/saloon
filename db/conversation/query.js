@@ -13,7 +13,10 @@ module.exports = {
 //title and post is verified by server
 function createConvo (user_id, title, post, serve) {
 	db.getClient((error, client, done) => {
-		if(error) return serve(error, "Error connecting client")
+		if(error) {
+			console.error('Error connecting client', error)
+			return serve (true, "Error connecting client")
+		}
 
 		const abort = err => {
 			if(err){
@@ -29,26 +32,26 @@ function createConvo (user_id, title, post, serve) {
 		}
 
 		client.query('BEGIN', err => {
-			if(abort(err)) return serve(err, "Error beginning transaction")
+			if(abort(err)) return serve (true, "Error beginning transaction")
 
 			let query = 'INSERT INTO convo (title, last_post_at, posts, contributors) VALUES ($1, NOW(), 1, 1) RETURNING convo_id'
 			client.query(query, [title], (error, results) => {
-				if(abort(error)) return serve(error, "Error inserting convo")
+				if(abort(error)) return serve (true, "Error inserting convo")
 				const convo = {}
 				convo.convo_id = results.rows[0]['convo_id']
 				
 				query = 'INSERT INTO contributor (convo_id, contributor_id, inviter_id, accepted_at) VALUES ($1, $2, $2, NOW())'
 				client.query(query, [convo.convo_id, user_id], error => {
-					if(abort(error)) return serve(error, "Error inserting contributor")
+					if(abort(error)) return serve (true, "Error inserting contributor")
 
 					query = 'INSERT INTO post (convo_id, contributor_id, post) VALUES ($1, $2, $3)'
 					client.query(query, [convo.convo_id, user_id, post], error => {
-						if(abort(error)) return serve(error, "Error inserting post")
+						if(abort(error)) return serve (true, "Error inserting post")
 
 						client.query('COMMIT', err => {
-							if(abort(err)) return serve(err, "Error commiting transaction")
+							if(abort(err)) return serve (true, "Error commiting transaction")
 							done()
-							return serve(null, convo)
+							return serve (null, convo)
 						})
 					})
 				})
@@ -58,14 +61,15 @@ function createConvo (user_id, title, post, serve) {
 }
 
 //returns an object containing all the convo information
-//see api documentation for structure
+//see api docs for structure
 function getConvo (convo_id, user_id, serve) {
 	db.query(
 		'UPDATE convo SET views = views + 1 WHERE convo_id = $1',
 		[convo_id],
 		(error, _result) => {
 			if (error) {
-				return serve(error, "update convo views failed");
+				console.error('Update views falied', error)
+				return serve (true, "update convo views failed");
 			}
 		}
 	);
@@ -96,7 +100,8 @@ function getConvo (convo_id, user_id, serve) {
 		[convo_id],
 		(error, results) => {
 			if (error) {
-				return serve(error, "select convo failed");
+				console.error('Select convo failed', error)
+				return serve (true, "select convo failed");
 			}
 			convo.convo_id = convo_id
 			convo.title = results.rows[0]['title'];
@@ -115,7 +120,7 @@ function getConvo (convo_id, user_id, serve) {
 			//get posts
 			getPosts(convo_id, (err, res) => {
 				if (err) {
-					return serve(err, res);
+					return serve (err, res);
 				}
 				convo.posts = res;
 
@@ -128,7 +133,10 @@ function getConvo (convo_id, user_id, serve) {
 function vote(convo_id, user_id, vote, serve){
 
 	db.getClient((error, client, done) => {
-		if(error) return serve(error, "Error connecting client")
+		if(error) {
+			console.error('Error connecting client', error)
+			return serve (true, 'Error connecting client')
+		}
 
 		const abort = err => {
 			if(err){
@@ -144,13 +152,13 @@ function vote(convo_id, user_id, vote, serve){
 		}
 
 		client.query('BEGIN', err => {
-			if(abort(err)) return serve (err, 'Error beginning transaction')
+			if(abort(err)) return serve (true, 'Error beginning transaction')
 
 			let query = 'SELECT vote FROM convo_vote ' + 
 				'WHERE convo_id = $1 AND user_id = $2 ' + 
 				'ORDER BY vote_at DESC'
 			client.query(query, [convo_id, user_id], (error, results) => {
-				if(abort(error)) return serve (error, 'Error selecting previous vote')
+				if(abort(error)) return serve (true, 'Error selecting previous vote')
 				
 				let oldVote = 0
 				if(results.rowCount > 0) oldVote = results.rows[0]['vote']
@@ -158,17 +166,17 @@ function vote(convo_id, user_id, vote, serve){
 				query = 'INSERT INTO convo_vote ' + 
 					'(convo_id, user_id, vote) VALUES ($1, $2, $3)'
 				client.query(query, [convo_id, user_id], error => {
-					if(abort(error)) return serve(error, 'Error inserting vote')
+					if(abort(error)) return serve (true, 'Error inserting vote')
 
 					let voteDiff = vote - oldVote
 					query = 'UPDATE convo SET votes = votes - $2 WHERE convo_id = $1'
 					client.query(query, [convo_id, voteDiff], error => {
-						if(abort(error)) return serve(error, 'Error updating vote count')
+						if(abort(error)) return serve (true, 'Error updating vote count')
 
 						client.query('COMMIT', err => {
-							if(abort(err)) return serve(err, "Error commiting transaction")
+							if(abort(err)) return serve (true, "Error commiting transaction")
 							done()
-							return serve(null, true)
+							return serve (null, true)
 						})
 					})
 				})

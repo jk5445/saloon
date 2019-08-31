@@ -11,7 +11,8 @@ function getFeed(batch, serve) {
     db.query(
         query, [], (error, results) => {
             if(error){
-                return serve(error, "select feed failed")
+                console.error('select feed failed', error)
+                return serve (true, "select feed failed")
             }
 
             convos = []
@@ -25,13 +26,13 @@ function getFeed(batch, serve) {
 
                 getContributors(convo.convo_id, (error, response) => {
                     if(error){
-                        return serve(error, response)
+                        return serve (error, response)
                     }
                     convo.contributors = response
                     convos.push(convo)
                     count++;
                     if(count >= limit){
-                        return serve(null, {convos: convos})
+                        return serve (null, {convos: convos})
                     }
                 })
             }
@@ -41,6 +42,6 @@ function getFeed(batch, serve) {
 
 /*
 function getFeedByTag(tag, batch, serve){
-    return serve(null, null)
+    return serve (null, null)
 }
 */

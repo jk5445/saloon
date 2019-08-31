@@ -23,7 +23,6 @@ module.exports = app => {
 
         db.createConvo(user_id, title, post, (err, res) => {
             if(err){
-                console.error(res, err);
                 return response.status(400).send('Query failed')
             }
             return response.json(res);
@@ -41,7 +40,6 @@ module.exports = app => {
 
         db.getConvo(convo_id, user_id, (err, res) => {
             if(err){
-                console.error(res, err);
                 return response.status(400).send('Query failed')
             }
             return response.json(res);
@@ -64,7 +62,6 @@ module.exports = app => {
 
         db.vote(convo_id, user_id, vote, (err, res) => {
             if(err){
-                console.error(res, err)
                 return response.status(400).send('Query failed')
             }
 

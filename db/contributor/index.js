@@ -5,10 +5,12 @@ const validate = require('validator');
 
 module.exports = app => {
     //get contributors
+    /*
     app.get('/api/v1/contributor/:convo_id', (request, response) => {
         //TODO: implement method
         response.end();
     });
+    */
 
     //invite contributor
     //auth
@@ -20,26 +22,23 @@ module.exports = app => {
         if(!validate.isAlphanumeric(contributor_username)){
             return response.status(400).send("Invalid contributor username");
         }
-
         if(!validate.isInt(convo_id + '')){
             return response.status(400).send("Invalid convo_id");
         }
 
         db.authorize(convo_id, inviter_id, (err, res) => {
-            if (err){
-                console.log("ERROR LOG: " + res);
-                throw err;
+            if (err) {
+                return response.status(401).send("Authorization failed")
             }
             if(res) {
                 db.inviteContributor(convo_id, contributor_username, inviter_id, (err, _res) => {
                     if(err) {
-                        console.log("ERROR LOG: " + res);
-                        throw err;
+                        return response.status(400).send("Invite failed")
                     }
                     return response.status(201).end();
                 });
             } else {
-                return response.status(400).end();
+                return response.status(401).end("Authorization failed");
             }
         });
     });
@@ -55,8 +54,7 @@ module.exports = app => {
 
         db.acceptInvite(convo_id, contributor_id, (err, res) => {
             if(err) {
-                console.log("ERROR LOG: " + res);
-                throw err;
+                return response.status(400).send("Accept invite failed");
             }
             return response.status(200).end();
         });

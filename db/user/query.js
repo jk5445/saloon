@@ -14,7 +14,8 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 	let hash;
 	bcrypt.hash(password, saltRounds, (err, res) => {
 		if (err){
-			return serve(err, "bcrypt hash failed");
+			console.error('Bcrypt hash failed', err)
+			return serve (true, "bcrypt hash failed");
 		}
 		hash = res;
 		db.query(
@@ -22,12 +23,14 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 			[userName, firstName, lastName, email, hash],
 			(error, results) => {
 				if (error) {
-					return serve(error, "insert user failed");
+					console.error('Insert user failed', error)
+					return serve (true, "insert user failed");
 				} else if (results.rowCount < 1) {
-					return serve(true, "user_id not returned");
+					console.error('user_id not returned', 'Contrived Error')
+					return serve (true, "user_id not returned");
 				}
 				
-				serve(error, results.rows[0]['user_id']);
+				serve (null, results.rows[0]['user_id']);
 			}
 		);
 	});
@@ -41,18 +44,21 @@ function logIn (email, password, serve) {
 		[email],
 		(error, results) => {
 			if (error) {
-				return serve(error, "select user failed");
+				console.error('Select user failed', error)
+				return serve (true, "select user failed");
 			} else if(results.rowCount < 1){
-				return serve(true, "email is not valid");
+				console.error('Incorrect email', 'Contrived Error')
+				return serve (true, "Incorrect email");
 			}
 
 			const hash = results.rows[0]['password_hash'];
 			bcrypt.compare(password, hash, (err, res) => {
 				if(err){
-					return serve(err, "bcrypt compare failed");
+					console.error('bcrypt compare failed', err)
+					return serve (true, "bcrypt compare failed");
 				}
 				const user_id = results.rows[0]['user_id'];
-				return serve(err, user_id);
+				return serve (null, user_id);
 			});
 		}
 	)
@@ -65,28 +71,32 @@ function getUserById (user_id, serve) {
 	  [user_id],
 	  (error, results) => {
 		if (error) {
-      		return serve(error, "select user failed");
+			console.error('Select user failed', error)
+      		return serve (true, "select user failed");
 		} else if (results.rowCount < 1) {
-			return serve(true, "user_id " + user_id + " is not valid");
+			console.error('Invalid user_id', 'Contrived Error')
+			return serve (true, 'Invalid user_id');
 		}
 
 		const user = results.rows[0]
-		return serve(error, user);
+		return serve (null, user);
   	  }
   	);
 }
 
 function getUserName(user_id, serve) {
 	db.query(
-	  'SELECT user_name FROM users WHERE user_id = $1',
-	  [user_id],
-	  (error, results) => {
-		if (error) {
-			return serve(error, "select user failed");
-    	} else if (results.rowCount < 1) {
-			return serve(true, "user_id is not valid");
+		'SELECT user_name FROM users WHERE user_id = $1',
+		[user_id],
+		(error, results) => {
+			if (error) {
+				console.error('Select user failed', error)
+				return serve (true, "select user failed");
+			} else if (results.rowCount < 1) {
+				console.error('Invalid user_id', 'Contrived Error')
+				return serve (true, 'Invalid user_id');
+			}
+			return serve (null, results.rows[0]['user_name']);
 		}
-		return serve(null, results.rows[0]['user_name']);
-  	  }
   	);
 }
