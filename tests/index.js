@@ -63,26 +63,6 @@ axios({
     token1 = res.data;
     console.log(res.data);
 
-url = "http://localhost:3000/api/v1/user";
-console.log("\nget: " + url);
-axios({
-    method: 'get',
-    url: url,
-    headers: {
-        authorization: token1
-    }
-}).then(res => { console.log(res.data)
-
-console.log("\nget: " + url);
-axios({
-    method: 'get',
-    url:url,
-    headers: {
-        authorization: token2
-    }
-})
-.then(res => { console.log(res.data)
-
 //CONVO and POST
 let convo_id;
 
@@ -204,7 +184,36 @@ axios({
     }
 }).then (res => {
 
+url = "http://localhost:3000/api/v1/user";
+console.log("\nget: " + url);
+axios({
+    method: 'get',
+    url: url,
+    headers: {
+        authorization: token1
+    }
+}).then(res => { console.log(res.data)
+
+console.log("\nget: " + url);
+axios({
+    method: 'get',
+    url: url,
+    headers: {
+        authorization: token2
+    }
+})
+.then(res => { console.log(res.data)
+
 url = "http://localhost:3000/api/v1/feed";
+console.log("\nget: " + url);
+axios.get(url)
+.then( res => {
+    let i = 0;
+    for(i; i < res.data.convos.length; i++){
+        console.log(res.data.convos[i])
+    }
+
+url = "http://localhost:3000/api/v1/feed/sheep";
 console.log("\nget: " + url);
 axios.get(url)
 .then( res => {
@@ -226,7 +235,7 @@ axios.get(url)
         );
 },
 
-
+    err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},

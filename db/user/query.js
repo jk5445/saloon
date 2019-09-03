@@ -1,4 +1,5 @@
 const db = require('../queries');
+const {getFeedById} = require('../feed/query')
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -77,9 +78,25 @@ function getUserById (user_id, serve) {
 			console.error('Invalid user_id', 'Contrived Error')
 			return serve (true, 'Invalid user_id');
 		}
-
 		const user = results.rows[0]
-		return serve (null, user);
+
+		db.query(
+			'SELECT convo_id, contributor_id, post, created_at FROM post WHERE contributor_id = $1 ORDER BY created_at DESC', [user_id], (error, results) => {
+				if(error) {
+					console.error('Select posts failed', error)
+					return serve (null, user)
+				} else if (results.rowCount < 1) {
+					return serve (null, user)
+				}
+				user.posts = results.rows
+
+				getFeedById(user_id, 1, (error, results) => {
+					if(error) return serve(error, results)
+					user.convos = results.convos
+					return serve (null, user);
+				})
+			}
+		)
   	  }
   	);
 }
