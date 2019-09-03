@@ -165,11 +165,11 @@ function vote(convo_id, user_id, vote, serve){
 
 				query = 'INSERT INTO convo_vote ' + 
 					'(convo_id, user_id, vote) VALUES ($1, $2, $3)'
-				client.query(query, [convo_id, user_id], error => {
+				client.query(query, [convo_id, user_id, vote], error => {
 					if(abort(error)) return serve (true, 'Error inserting vote')
 
 					let voteDiff = vote - oldVote
-					query = 'UPDATE convo SET votes = votes - $2 WHERE convo_id = $1'
+					query = 'UPDATE convo SET votes = votes + $2 WHERE convo_id = $1'
 					client.query(query, [convo_id, voteDiff], error => {
 						if(abort(error)) return serve (true, 'Error updating vote count')
 

@@ -48,7 +48,7 @@ function optAuth (request, response, next){
 	const token = request.headers['authorization']
 	request.body.user_id = null
 
-	if(!isJWT(token) || token == undefined){
+	if(token == undefined || !isJWT(token)){
 		return next()
 	}
 
