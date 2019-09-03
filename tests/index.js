@@ -214,13 +214,11 @@ axios.get(url)
     }
 
         db.query(
-            ' DELETE FROM convo_vote; DELETE FROM contributor; DELETE FROM post; DELETE FROM comment_vote; DELETE FROM comment; DELETE FROM convo; DELETE FROM users;', [], (error, _results) => {
+            'DELETE FROM convo_vote; DELETE FROM contributor; DELETE FROM post; DELETE FROM comment_vote; DELETE FROM comment; DELETE FROM convo; DELETE FROM users;', [], (error, _results) => {
                 if(error){
                     console.log(error);
                 } else {
                     console.log("db cleared");
-                    axios.get('http://localhost:3000/pool/end')
-                    .then(res => console.log(res.data), err => console.log(err))
                 }
             }
         );
