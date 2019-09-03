@@ -8,11 +8,11 @@ module.exports = app => {
     //signup
     //info in the body
     app.post('/api/v1/user/signup', (request, response) => {
-        const username = request.body.username;
-        const first_name = request.body.first_name;
-        const last_name = request.body.last_name;
-        const email = request.body.email;
-        const password = request.body.password;
+        const username = request.body.username + '';
+        const first_name = request.body.first_name + '';
+        const last_name = request.body.last_name + '';
+        const email = request.body.email + '';
+        const password = request.body.password + '';
 
         if(!validate.isLength(username, {min: 5, max: 20})){
             return response.staus(400).send("Username must contain at least 5 characters and at most 20 characters");
@@ -43,8 +43,8 @@ module.exports = app => {
     //login
     //info in the body
     app.post('/api/v1/user/login', (request, response) => {
-        const email = request.body.email;
-        const password = request.body.password;
+        const email = request.body.email + '';
+        const password = request.body.password + '';
 
         if(!validate.isEmail(email) || !validate.isLength(email, {max: 255})){
             return response.status(400).send("Invalid email");

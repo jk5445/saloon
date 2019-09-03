@@ -9,8 +9,8 @@ module.exports = app => {
     //create conversation
     //auth
     app.post('/api/v1/convo', authenticate, (request, response) => {
-        const title = request.body.title;
-        const post = request.body.post;
+        const title = request.body.title + '';
+        const post = request.body.post + '';
         const user_id = request.body.user_id;
 
         if(!validate.isLength(title, {min: 5, max: 150})){
@@ -31,7 +31,7 @@ module.exports = app => {
 
     //get conversation
     app.get('/api/v1/convo/:convo_id', optAuth, (request, response) => {
-        const convo_id = request.params.convo_id;
+        const convo_id = request.params.convo_id
         const user_id = request.body.user_id
 
         if(!validate.isInt(convo_id + '')){
