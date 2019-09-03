@@ -102,6 +102,9 @@ function getConvo (convo_id, user_id, serve) {
 			if (error) {
 				console.error('Select convo failed', error)
 				return serve (true, "select convo failed");
+			} else if (results.rowCount < 1){
+				console.error('Select convo failed')
+				return serve (true, "select convo failed")
 			}
 			convo.convo_id = convo_id
 			convo.title = results.rows[0]['title'];
