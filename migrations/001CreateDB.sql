@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS convo (
 	views integer DEFAULT 0,
 	votes integer DEFAULT 0,
 	comments integer DEFAULT 0,
-	last_post_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+	created_at timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	last_post_at timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS post (
@@ -23,22 +24,15 @@ CREATE TABLE IF NOT EXISTS post (
 	convo_id integer REFERENCES convo (convo_id) NOT NULL,
 	post text NOT NULL,
 	contributor_id integer REFERENCES users (user_id) NOT NULL,
-	created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+	created_at timestamp WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS contributor (
 	convo_id integer REFERENCES convo (convo_id) NOT NULL,
 	contributor_id integer REFERENCES users (user_id) NOT NULL,
 	inviter_id integer REFERENCES users (user_id) NOT NULL,
-	invited_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-	accepted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+	invited_at timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	accepted_at timestamp WITH TIME ZONE DEFAULT NULL,
 	
 	CONSTRAINT contributor_key PRIMARY KEY(convo_id, contributor_id)
 );
-
-/*CREATE TABLE IF NOT EXISTS comment (
-	comment_id serial PRIMARY KEY,
-	convo_id integer REFERENCES convo (convo_id),
-	prev_id integer REFERENCES comment (comment_id) DEFAULT NULL, 
-	comment_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-);*/

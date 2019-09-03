@@ -12,7 +12,6 @@ module.exports = app => {
 
         db.getFeed(batch, (err, res) => {
             if(err) {
-                console.log(err)
                 return response.status(400).send(res)
             }
             return response.json(res)

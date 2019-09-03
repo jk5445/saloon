@@ -11,7 +11,10 @@ module.exports = {
 //this check should happen at server level
 function createPost (convo_id, contributor_id, post, serve) {
 	db.getClient((error, client, done) => {
-		if(error) return serve(error, "Error connecting client")
+		if(error) {
+			console.error('Error connecting client', error)
+			return serve (true, "Error connecting client")
+		}
 
 		const abort = err => {
 			if(err){
@@ -27,20 +30,20 @@ function createPost (convo_id, contributor_id, post, serve) {
 		}
 
 		client.query('BEGIN', err => {
-			if(abort(err)) return serve(err, "Error beginning transaction")
+			if(abort(err)) return serve (true, "Error beginning transaction")
 
 			let query = 'INSERT INTO post (convo_id, contributor_id, post) VALUES ($1, $2, $3)'
 			client.query(query, [convo_id, contributor_id,  post], error => {
-				if(abort(error)) return serve(error, "Error inserting post")
+				if(abort(error)) return serve (true, "Error inserting post")
 
 				query = 'UPDATE convo SET (posts, last_post_at) = (posts + 1, NOW()) WHERE convo_id = $1'
 				client.query(query, [convo_id], error => {
-					if(abort(error)) return serve(error, "Error updating post count")
+					if(abort(error)) return serve (true, "Error updating post count")
 
 					client.query('COMMIT', err => {
-						if(abort(err)) return serve(err, "Error commiting transaction")
+						if(abort(err)) return serve (true, "Error commiting transaction")
 						done()
-						return serve(err, true)
+						return serve (null, true)
 					})
 				})
 			})
@@ -53,9 +56,11 @@ function getPosts (convo_id, serve) {
 		[convo_id],
 		(error, results) => {
 			if (error) {
-				return (error, "select post failed");
+				console.error('select post failed', error)
+				return serve (true, "select post failed");
 			} else if (results.rowCount < 1) {
-				return serve(true, "convo has no post");
+				console.error('Conversation has no posts', 'Contrived Error')
+				return serve (true, "convo has no post");
 			}
 
 			let posts = [];
@@ -69,7 +74,7 @@ function getPosts (convo_id, serve) {
 				const user_id = results.rows[i]['contributor_id']
 				user.getUserName(user_id, (err, res) => {
 					if(err){
-						return serve(err, res);
+						return serve (err, res);
 					}
 
 					post.contributor = res;
@@ -77,7 +82,7 @@ function getPosts (convo_id, serve) {
 					count++;
 					
 					if(count >= results.rowCount){
-						return serve(err, posts);
+						return serve (null, posts);
 					}
 				});
 			}
@@ -94,11 +99,12 @@ function authorize (convo_id, contributor_id, serve) {
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
-				return serve(error, "select contributor failed");
+				console.error('Select contributor failed', error)
+				return serve (true, "select contributor failed");
 			}
 			//true if record is found
 			authorized = (results.rowCount > 0);
-			return serve(error, authorized);
+			return serve (null, authorized);
 		}
 	);
 }

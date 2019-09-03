@@ -15,38 +15,35 @@ module.exports = app => {
         const post = request.body.post;
 
         if(!validate.isInt(convo_id + '')) {
-            return response.status(400).send("invalid convo_id");
+            return response.status(400).send("Invalid convo_id");
         }
         if(!validate.isLength(post, {min: 10, max: undefined})) {
             return response.status(400).send("Post must contain at least 10 characters");
         }
-
-        let authorized = false;
+        
         db.authorize(convo_id, user_id, (err, res) => {
             if (err) {
-                console.log(res);
-                throw err;
+                return response.status(400).send("Post failed");
             }
             else if(res) {
-                db.createPost(convo_id, user_id, post, (err, res) => {
+                db.createPost(convo_id, user_id, post, (err, _res) => {
                     if(err) {
-                        console.log(res);
-                        throw err;
+                        return response.status(400).send("Post failed");
                     }
-                    response.status(201).end();
+                    return response.status(201).end("Post failed");
                 });
             } else {
-                response.status(400).end();
+                return response.status(400).end("Post failed");
             }
         });
     });
 
     //get post
     //secondary priority
-    
+    /*
     app.get('/api/v1/post/:convo_id/:postNumber', (request, response) => {
         //TODO: implement method
         response.end();
     });
-    
+    */
 }
