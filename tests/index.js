@@ -169,10 +169,40 @@ axios({
 })
 .then( res => {console.log("post convo 2 succesful");
 
-url = "http://localhost:3000/api/v1/convo" + "/" + convo_id;
+url = "http://localhost:3000/api/v1/convo/" + convo_id + "/vote/1"
+console.log("\nput: " + url)
+axios({
+    method: 'put',
+    url: url,
+    headers: {
+        authorization: token1
+    }
+}).then (res => {
+
+url = "http://localhost:3000/api/v1/convo/" + convo_id + "/vote/1"
+console.log("\nput: " + url)
+axios({
+    method: 'put',
+    url: url,
+    headers: {
+        authorization: token2
+    }
+}).then (res => {
+
+url = "http://localhost:3000/api/v1/convo/" + convo_id;
 console.log("\nget: " + url);
 axios.get(url)
 .then( res => { console.log(res.data);
+
+url = "http://localhost:3000/api/v1/convo/" + convo_id + "/vote/0"
+console.log("\nput: " + url)
+axios({
+    method: 'put',
+    url: url,
+    headers: {
+        authorization: token2
+    }
+}).then (res => {
 
 url = "http://localhost:3000/api/v1/feed";
 console.log("\nget: " + url);
@@ -184,7 +214,7 @@ axios.get(url)
     }
 
         db.query(
-            'DELETE FROM contributor; DELETE FROM post; DELETE FROM convo; DELETE FROM users', [], (error, _results) => {
+            ' DELETE FROM convo_vote; DELETE FROM contributor; DELETE FROM post; DELETE FROM comment_vote; DELETE FROM comment; DELETE FROM convo; DELETE FROM users;', [], (error, _results) => {
                 if(error){
                     console.log(error);
                 } else {
@@ -197,6 +227,9 @@ axios.get(url)
 },
 
 
+    err => console.log(err))},
+    err => console.log(err))},
+    err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},
     err => console.log(err))},
