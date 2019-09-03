@@ -19,7 +19,7 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 		}
 		hash = res;
 		db.query(
-			'INSERT INTO users (user_name, first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING user_id',
+			'INSERT INTO users (username, first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING user_id',
 			[userName, firstName, lastName, email, hash],
 			(error, results) => {
 				if (error) {
@@ -67,7 +67,7 @@ function logIn (email, password, serve) {
 //TODO: add user history to user object
 function getUserById (user_id, serve) {
 	db.query(
-	  'SELECT user_name, first_name, last_name, email FROM users WHERE user_id = $1',
+	  'SELECT username, first_name, last_name, email FROM users WHERE user_id = $1',
 	  [user_id],
 	  (error, results) => {
 		if (error) {
@@ -84,9 +84,9 @@ function getUserById (user_id, serve) {
   	);
 }
 
-function getUserName(user_id, serve) {
+function getUserName (user_id, serve) {
 	db.query(
-		'SELECT user_name FROM users WHERE user_id = $1',
+		'SELECT username FROM users WHERE user_id = $1',
 		[user_id],
 		(error, results) => {
 			if (error) {
@@ -96,7 +96,7 @@ function getUserName(user_id, serve) {
 				console.error('Invalid user_id', 'Contrived Error')
 				return serve (true, 'Invalid user_id');
 			}
-			return serve (null, results.rows[0]['user_name']);
+			return serve (null, results.rows[0]['username']);
 		}
   	);
 }
