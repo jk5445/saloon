@@ -8,13 +8,13 @@ module.exports = app => {
     //signup
     //info in the body
     app.post('/api/v1/user/signup', (request, response) => {
-        const user_name = request.body.user_name;
+        const username = request.body.username;
         const first_name = request.body.first_name;
         const last_name = request.body.last_name;
         const email = request.body.email;
         const password = request.body.password;
 
-        if(!validate.isLength(user_name, {min: 5, max: 20})){
+        if(!validate.isLength(username, {min: 5, max: 20})){
             return response.staus(400).send("Username must contain at least 5 characters and at most 20 characters");
         }
         if(!validate.isLength(first_name, {min: 5, max: 20})){
@@ -31,7 +31,7 @@ module.exports = app => {
         }
 
 
-        db.createUser(user_name, first_name, last_name, email, password, (err, user_id) => {
+        db.createUser(username, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
                 return response.status(400).send('Query failed')
             }

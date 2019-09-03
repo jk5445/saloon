@@ -10,7 +10,7 @@ module.exports = {
 
 function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 	db.query(
-		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, (SELECT user_id FROM users WHERE user_name=$2), $3)',
+		'INSERT INTO contributor (convo_id, contributor_id, inviter_id) VALUES ($1, (SELECT user_id FROM users WHERE username=$2), $3)',
 		[convo_id, contributor_username, inviter_id],
 		(error, _results) => {
 	  		if(error){
@@ -65,7 +65,7 @@ function acceptInvite (convo_id, contributor_id, serve) {
 }
 
 function getContributors (convo_id, serve) {
-	const query = "SELECT users.user_name FROM contributor " + 
+	const query = "SELECT users.username FROM contributor " + 
 		"INNER JOIN users ON users.user_id=contributor.contributor_id " + 
 		"WHERE convo_id=$1 and accepted_at IS NOT NULL"
 	db.query( 
@@ -81,7 +81,7 @@ function getContributors (convo_id, serve) {
 			let i = 0
 			let contributors = [];
 			for(i; i < results.rowCount; i++) {
-				const contributorName = results.rows[i]['user_name'];
+				const contributorName = results.rows[i]['username'];
 				contributors.push(contributorName)
 			}
 			return serve (null, contributors);

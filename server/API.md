@@ -6,7 +6,7 @@ post */api/v1/user/signup*
 request body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"user_name":"user",  
+"username":"user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
 "first_name":"first",  
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -26,7 +26,7 @@ post */api/v1/user/login*
 request body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"user_name": "user",  
+"username": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
 "password": "password"  
 }  
@@ -40,7 +40,7 @@ request Authorization header
 response body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-    "user_name": "user",  
+    "username": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
     "first_name": "first",  
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -90,7 +90,7 @@ request Authorization header
 request body  
 {  
 &nbsp;&nbsp;&nbsp;&nbsp;
-"user_name": "user",  
+"username": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;
 "first_name": "first",  
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -285,7 +285,7 @@ response body  //needs thought
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             "comment_id": "comment_id",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            "user_name": "user",  
+            "username": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             "comment": "comment text",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -299,7 +299,7 @@ response body  //needs thought
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     "comment_id": "comment_id",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    "user_name": "user",  
+                    "username": "user",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     "comment": "comment text",  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

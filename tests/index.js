@@ -23,7 +23,7 @@ axios({
     method: 'post',
     url: url,
     data: {
-        user_name: 'sheep',
+        username: 'sheep',
         first_name: 'Judah',
         last_name: 'Kishk',
         email: 'email@saloon.org',
@@ -40,7 +40,7 @@ axios({
     method: 'post',
     url: url,
     data: {
-        user_name: 'peehs',
+        username: 'peehs',
         first_name: 'Judah',
         last_name: 'Judah',
         email: 'liame@saloon.org',

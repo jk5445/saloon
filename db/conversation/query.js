@@ -91,7 +91,7 @@ function getConvo (convo_id, user_id, serve) {
 		)
 	}
 
-	const query = "SELECT convo.*, users.user_name " +  
+	const query = "SELECT convo.*, users.username " +  
 	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
 	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
 	"WHERE convo.convo_id=$1";
@@ -117,7 +117,7 @@ function getConvo (convo_id, user_id, serve) {
 			let i;
 			convo.contributors = [];
 			for(i = 0; i < results.rowCount; i++){
-				convo.contributors.push(results.rows[i]['user_name']);
+				convo.contributors.push(results.rows[i]['username']);
 			}
 
 			//get posts
