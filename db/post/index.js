@@ -12,7 +12,7 @@ module.exports = app => {
     app.post('/api/v1/post', authenticate, (request, response) => {
         const user_id = request.body.user_id;
         const convo_id = request.body.convo_id;
-        const post = request.body.post;
+        const post = request.body.post + '';
 
         if(!validate.isInt(convo_id + '')) {
             return response.status(400).send("Invalid convo_id");

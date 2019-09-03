@@ -16,7 +16,7 @@ module.exports = app => {
     //auth
     app.post('/api/v1/contributor', authenticate, (request, response) => {
         const inviter_id = request.body.user_id;
-        const contributor_username = request.body.invite;
+        const contributor_username = request.body.invite + '';
         const convo_id = request.body.convo_id;
 
         if(!validate.isAlphanumeric(contributor_username)){
