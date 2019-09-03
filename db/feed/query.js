@@ -57,8 +57,8 @@ function getFeedByUser(username, batch, serve) {
                 console.error('select feed failed', error)
                 return serve (true, "select feed failed")
             } else if (results.rowCount < 1) {
-                console.error('Empty feed')
-                return serve (true, 'Empty feed')
+                console.error('Feed is empty')
+                return serve (true, 'Feed is empty')
             }
 
             convos = []
@@ -97,8 +97,8 @@ function getFeedById(user_id, batch, serve) {
                 console.error('select feed failed', error)
                 return serve (true, "select feed failed")
             } else if (results.rowCount < 1) {
-                console.error('Empty feed')
-                return serve (true, 'Empty feed')
+                console.error('Feed is empty')
+                return serve (true, 'Feed is empty')
             }
 
             convos = []
