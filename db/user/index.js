@@ -15,13 +15,13 @@ module.exports = app => {
         const password = request.body.password + '';
 
         if(!validate.isLength(username, {min: 5, max: 20})){
-            return response.staus(400).send("Username must contain at least 5 characters and at most 20 characters");
+            return response.status(400).send("Username must contain at least 5 characters and at most 20 characters");
         }
         if(!validate.isLength(first_name, {min: 5, max: 20})){
-            return response.staus(400).send("First name must contain at least 5 characters and at most 20 characters");
+            return response.status(400).send("First name must contain at least 5 characters and at most 20 characters");
         }
         if(!validate.isLength(last_name, {min: 5, max: 20})){
-            return response.staus(400).send("Last name must contain at least 5 characters and at most 20 characters");
+            return response.status(400).send("Last name must contain at least 5 characters and at most 20 characters");
         }
         if(!validate.isEmail(email) || !validate.isLength(email, {max: 255})){
             return response.status(404).send("Invalid email");
