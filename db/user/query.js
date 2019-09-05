@@ -57,9 +57,12 @@ function logIn (email, password, serve) {
 				if(err){
 					console.error('bcrypt compare failed', err)
 					return serve (true, "bcrypt compare failed");
+				} else if (res) {
+					const user_id = results.rows[0]['user_id'];
+					return serve (null, user_id);
+				} else {
+					return serve(true, "Incorrect password")
 				}
-				const user_id = results.rows[0]['user_id'];
-				return serve (null, user_id);
 			});
 		}
 	)
