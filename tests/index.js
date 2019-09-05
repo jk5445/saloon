@@ -228,7 +228,7 @@ axios.get(url)
                     console.log(error);
                 } else {
                     console.log("db cleared");
-                    db.end()
+                    //db.end()
                 }
             }
         );
