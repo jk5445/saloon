@@ -13,6 +13,7 @@ module.exports = {
 
 
 function createToken (user_id, response){
+	console.log(secret)
 	jwt.sign({sub: user_id, iss: issuer}, secret, {expiresIn: expIn}, (err, token) => {
 		if(err){
 			console.log("Error creating token", err)
