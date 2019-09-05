@@ -21,6 +21,7 @@ module.exports = app => {
             return response.status(400).send("First name must contain at least 2 characters and at most 20 characters");
         }
         if(!last_name || !validate.isLength(last_name, {min: 2, max: 20})){
+
             return response.status(400).send("Last name must contain at least 2 characters and at most 20 characters");
         }
         if(!email || !validate.isEmail(email) || !validate.isLength(email, {max: 255})){
@@ -29,7 +30,6 @@ module.exports = app => {
         if(!password || !validate.isLength(password, {min: 8, max: 50})){
             return response.status(400).send("Password length must be between 8 and 50 characters");
         }
-
 
         db.createUser(username, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
