@@ -1,4 +1,5 @@
-require('dotenv').config();
+const dotenv = require('dotenv').config();
+const aws = require('aws-sdk');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
