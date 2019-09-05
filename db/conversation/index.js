@@ -9,15 +9,15 @@ module.exports = app => {
     //create conversation
     //auth
     app.post('/api/v1/convo', authenticate, (request, response) => {
-        const title = request.body.title + '';
-        const post = request.body.post + '';
+        const title = request.body.title
+        const post = request.body.post
         const user_id = request.body.user_id;
 
-        if(!validate.isLength(title, {min: 5, max: 150})){
+        if(!title || !validate.isLength(title, {min: 5, max: 150})){
             return response.status(400).send("Title must contain more than 5 characters and less than 150 characters");
         }
 
-        if(!validate.isLength(post, {min: 10, max: undefined})){
+        if(!post || !validate.isLength(post, {min: 10, max: undefined})){
             return response.status(400).send("Post must contain at least 10 characters");
         }
 

@@ -10,14 +10,14 @@ module.exports = app => {
     //create post
     //auth
     app.post('/api/v1/post', authenticate, (request, response) => {
-        const user_id = request.body.user_id;
-        const convo_id = request.body.convo_id;
-        const post = request.body.post + '';
+        const user_id = request.body.user_id
+        const convo_id = request.body.convo_id
+        const post = request.body.post
 
-        if(!validate.isInt(convo_id + '')) {
+        if(!convo_id || !validate.isInt(convo_id + '')) {
             return response.status(400).send("Invalid convo_id");
         }
-        if(!validate.isLength(post, {min: 10, max: undefined})) {
+        if(!post || !validate.isLength(post, {min: 10, max: undefined})) {
             return response.status(400).send("Post must contain at least 10 characters");
         }
         
