@@ -12,7 +12,7 @@ module.exports = app => {
 
         db.getFeed(batch, (err, res) => {
             if(err) {
-                return response.status(400).send(res)
+                return response.status(400).send({ message: res })
             }
             return response.json(res)
         })
@@ -27,7 +27,7 @@ module.exports = app => {
             batch = 1
         }
         if(!username || !validate.isAlphanumeric(username)){
-            return response.status(400).send('invalid username')
+            return response.status(400).send({ message: 'invalid username' })
         }
 
         db.getFeedByUser(username, batch, (err, res) => {

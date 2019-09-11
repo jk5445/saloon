@@ -20,20 +20,20 @@ module.exports = app => {
         const convo_id = request.body.convo_id
 
         if(!contributor_username || !validate.isAlphanumeric(contributor_username)){
-            return response.status(400).send("Invalid contributor username");
+            return response.status(400).send({ message: "Invalid contributor username" });
         }
         if(!validate.isInt(convo_id + '')){
-            return response.status(400).send("Invalid convo_id");
+            return response.status(400).send({ message: "Invalid convo_id" });
         }
 
         db.authorize(convo_id, inviter_id, (err, res) => {
             if (err) {
-                return response.status(401).send("Authorization failed")
+                return response.status(401).send({ message: "Authorization failed" })
             }
             if(res) {
                 db.inviteContributor(convo_id, contributor_username, inviter_id, (err, _res) => {
                     if(err) {
-                        return response.status(400).send("Invite failed")
+                        return response.status(400).send({ message: "Invite failed" })
                     }
                     return response.status(201).end();
                 });
@@ -49,12 +49,12 @@ module.exports = app => {
         const convo_id = request.params.convo_id
 
         if(!validate.isInt(convo_id + '')){
-            return response.status(400).send("Invalid convo_id");
+            return response.status(400).send({ message: "Invalid convo_id" });
         }
 
         db.acceptInvite(convo_id, contributor_id, (err, res) => {
             if(err) {
-                return response.status(400).send("Accept invite failed");
+                return response.status(400).send({ message: "Accept invite failed" });
             }
             return response.status(200).end();
         });
