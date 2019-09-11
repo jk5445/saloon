@@ -3,6 +3,7 @@ const aws = require('aws-sdk');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const user = require('../db/user');
 const conversation = require('../db/conversation');
@@ -16,6 +17,8 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true,}));
+
+app.use(cors());
 
 app.get('/api/v1', (_request, response) => {
   response.json({ info: 'Saloon API V1' });
