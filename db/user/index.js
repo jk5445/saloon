@@ -15,25 +15,25 @@ module.exports = app => {
         const password = request.body.password
 
         if(!username || !validate.isLength(username, {min: 5, max: 20})){
-            return response.status(400).send("Username must contain at least 5 characters and at most 20 characters");
+            return response.status(400).send({ message: "Username must contain at least 5 characters and at most 20 characters" });
         }
         if(!first_name || !validate.isLength(first_name, {min: 2, max: 20})){
-            return response.status(400).send("First name must contain at least 2 characters and at most 20 characters");
+            return response.status(400).send({ message: "First name must contain at least 2 characters and at most 20 characters" });
         }
         if(!last_name || !validate.isLength(last_name, {min: 2, max: 20})){
 
-            return response.status(400).send("Last name must contain at least 2 characters and at most 20 characters");
+            return response.status(400).send({ message: "Last name must contain at least 2 characters and at most 20 characters" });
         }
         if(!email || !validate.isEmail(email) || !validate.isLength(email, {max: 255})){
-            return response.status(404).send("Invalid email");
+            return response.status(404).send({ message: "Invalid email" });
         }
         if(!password || !validate.isLength(password, {min: 8, max: 50})){
-            return response.status(400).send("Password length must be between 8 and 50 characters");
+            return response.status(400).send({ message: "Password length must be between 8 and 50 characters" });
         }
 
         db.createUser(username, first_name, last_name, email, password, (err, user_id) => {
             if(err) {
-                return response.status(400).send('Query failed')
+                return response.status(400).send({ message: 'Query failed' })
             }
 
             createToken(user_id, response);
@@ -47,15 +47,15 @@ module.exports = app => {
         const password = request.body.password
 
         if(!email || !validate.isEmail(email) || !validate.isLength(email, {max: 255})){
-            return response.status(400).send("Invalid email");
+            return response.status(400).send({ message: "Invalid email" });
         }
         if(!password || !validate.isLength(password, {min: 8, max: 50})){
-            return response.status(400).send("Password length must be between 8 and 50 characters");
+            return response.status(400).send({ message: "Password length must be between 8 and 50 characters" });
         }
 
         db.logIn(email, password, (err, user_id) => {
             if(err) {
-                return response.status(400).send("Log in failed")
+                return response.status(400).send({ message: "Log in failed" })
             }
 
             if(user_id){
@@ -72,7 +72,7 @@ module.exports = app => {
         const user_id = request.body.user_id
         db.getUserById(user_id, (err, res) => {
             if(err){
-                return response.status(400).send("Get user failed")
+                return response.status(400).send({ message: "Get user failed" })
             }
             return response.status(200).json(res);
         })

@@ -14,16 +14,16 @@ module.exports = app => {
         const user_id = request.body.user_id;
 
         if(!title || !validate.isLength(title, {min: 5, max: 150})){
-            return response.status(400).send("Title must contain more than 5 characters and less than 150 characters");
+            return response.status(400).send({ message: "Title must contain more than 5 characters and less than 150 characters" });
         }
 
         if(!post || !validate.isLength(post, {min: 10, max: undefined})){
-            return response.status(400).send("Post must contain at least 10 characters");
+            return response.status(400).send({ message: "Post must contain at least 10 characters" });
         }
 
         db.createConvo(user_id, title, post, (err, res) => {
             if(err){
-                return response.status(400).send('Query failed')
+                return response.status(400).send({ message: 'Query failed' })
             }
             return response.json(res);
         });
@@ -35,12 +35,12 @@ module.exports = app => {
         const user_id = request.body.user_id
 
         if(!validate.isInt(convo_id + '')){
-            return response.status(400).send("Invalid convo_id")
+            return response.status(400).send({ message: "Invalid convo_id" })
         }
 
         db.getConvo(convo_id, user_id, (err, res) => {
             if(err){
-                return response.status(400).send('Query failed')
+                return response.status(400).send({ message: 'Query failed' })
             }
             return response.json(res);
         });
@@ -54,15 +54,15 @@ module.exports = app => {
         const user_id = request.body.user_id
         
         if(!validate.isInt(vote + '', {min: -1, max: 1})){
-            return response.status(400).send('Invalid vote')
+            return response.status(400).send({ message: 'Invalid vote' })
         }
         if(!validate.isInt(convo_id + '')){
-            return response.status(400).send("Invalid convo_id")
+            return response.status(400).send({ message: "Invalid convo_id" })
         }
 
         db.vote(convo_id, user_id, vote, (err, res) => {
             if(err){
-                return response.status(400).send('Query failed')
+                return response.status(400).send({ message: 'Query failed' })
             }
 
             return response.status(200).send(res)
