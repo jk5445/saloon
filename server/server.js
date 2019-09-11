@@ -18,7 +18,9 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true,}));
 
-app.use(cors());
+app.use(cors({
+  allowedHeaders: ['Authorization', 'Content-Type']
+}));
 
 app.get('/api/v1', (_request, response) => {
   response.json({ info: 'Saloon API V1' });
