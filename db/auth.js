@@ -18,7 +18,7 @@ function createToken (user_id, response){
 			console.log("Error creating token", err)
 			return response.status(400).send({ message: "Error creating token" })
 		}
-		return response.send(JSON.stringify({ token }))
+		return response.send({ token })
 	})
 }
 
