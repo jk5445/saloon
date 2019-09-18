@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS convo_vote (
 );
 
 CREATE TABLE IF NOT EXISTS comment (
-    comment_id serial PRIMARY KEY,
+    comment_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
     comment text NOT NULL,
     convo_id UUID REFERENCES convo (convo_id) NOT NULL,
     user_id UUID REFERENCES users (user_id) NOT NULL,
