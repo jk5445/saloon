@@ -34,7 +34,7 @@ module.exports = app => {
         const convo_id = request.params.convo_id
         const user_id = request.body.user_id
 
-        if(!validate.isInt(convo_id + '')){
+        if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" })
         }
 
@@ -56,7 +56,7 @@ module.exports = app => {
         if(!validate.isInt(vote + '', {min: -1, max: 1})){
             return response.status(400).send({ message: 'Invalid vote' })
         }
-        if(!validate.isInt(convo_id + '')){
+        if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" })
         }
 
