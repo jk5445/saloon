@@ -14,7 +14,7 @@ module.exports = app => {
         const convo_id = request.body.convo_id
         const post = request.body.post
 
-        if(!convo_id || !validate.isInt(convo_id + '')) {
+        if(!convo_id || !validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" });
         }
         if(!post || !validate.isLength(post, {min: 10, max: undefined})) {

@@ -22,7 +22,7 @@ module.exports = app => {
         if(!contributor_username || !validate.isAlphanumeric(contributor_username)){
             return response.status(400).send({ message: "Invalid contributor username" });
         }
-        if(!validate.isInt(convo_id + '')){
+        if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" });
         }
 
@@ -48,7 +48,7 @@ module.exports = app => {
         const contributor_id = request.body.user_id
         const convo_id = request.params.convo_id
 
-        if(!validate.isInt(convo_id + '')){
+        if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" });
         }
 
