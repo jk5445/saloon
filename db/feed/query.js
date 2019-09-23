@@ -1,5 +1,6 @@
 const db = require('../queries')
 const {getContributors} = require('../contributor/query')
+const moment = require('moment')
 
 module.exports = {
     getFeed,
@@ -27,6 +28,8 @@ function getFeed(batch, serve) {
             const limit = (results.rowCount < i + 10) ? results.rowCount : 10 + i
             for(i; i < limit; i++){
                 let convo = results.rows[i]
+                const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
+                convo.age = moment(last_post).fromNow()
 
                 getContributors(convo.convo_id, (error, response) => {
                     if(error){
@@ -84,6 +87,8 @@ function getFeedByUser(username, batch, serve) {
             const limit = (results.rowCount < i + 10) ? results.rowCount : 10 + i
             for(i; i < limit; i++){
                 let convo = results.rows[i]
+                const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
+                convo.age = moment(last_post).fromNow()
 
                 getContributors(convo.convo_id, (error, response) => {
                     if(error){
@@ -124,6 +129,8 @@ function getFeedById(user_id, batch, serve) {
             const limit = (results.rowCount < i + 10) ? results.rowCount : 10 + i
             for(i; i < limit; i++){
                 let convo = results.rows[i]
+                const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
+                convo.age = moment(last_post).fromNow()
 
                 getContributors(convo.convo_id, (error, response) => {
                     if(error){
