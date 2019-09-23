@@ -1,22 +1,22 @@
-const dotenv = require('dotenv').config();
-const aws = require('aws-sdk');
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const dotenv = require('dotenv').config()
+const aws = require('aws-sdk')
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors')
 
-const user = require('../db/user');
-const conversation = require('../db/conversation');
-const post = require('../db/post');
-const contributor = require('../db/contributor');
-const feed = require('../db/feed');
-//const comment = require('../db/comment');
+const user = require('../db/user')
+const conversation = require('../db/conversation')
+const post = require('../db/post')
+const contributor = require('../db/contributor')
+const feed = require('../db/feed')
+//const comment = require('../db/comment')
 
-const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0';
-const port = process.env.PORT || 3000;
+const hostname = (process.argv.length === 3) ? process.argv[2] : '0.0.0.0'
+const port = process.env.PORT || 3000
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true,}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true,}))
 
 app.use((request, response, next) => {
   let body = request.body
@@ -30,28 +30,28 @@ app.use((request, response, next) => {
 
 app.use(cors({
   allowedHeaders: ['Authorization', 'Content-Type']
-}));
+}))
 
 app.get('/api/v1', (_request, response) => {
-  response.json({ info: 'Saloon API V1' });
-});
+  response.json({ info: 'Saloon API V1' })
+})
 
 
 //Users
-user(app);
+user(app)
 //Conversations
-conversation(app);
+conversation(app)
 //Posts
-post(app);
+post(app)
 //Contributors
-contributor(app);
+contributor(app)
 //Feed
-feed(app);
+feed(app)
 //Comments
-//comment(app);
+//comment(app)
 
 
 app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server running on http://${hostname}:${port}/`);
-});
+    console.log(`Server running on http://${hostname}:${port}/`)
+})

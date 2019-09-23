@@ -1,11 +1,11 @@
-const db = require('../queries');
-const {getPosts, createPost} = require('../post/query');
+const db = require('../queries')
+const {getPosts, createPost} = require('../post/query')
 
 module.exports = {
 	createConvo, 
 	getConvo,
 	vote 
-};
+}
 
 //to create a conversation a user must provide a title, and a post
 //As these requirements are for all conversations, the whole process flows through this method
@@ -69,10 +69,10 @@ function getConvo (convo_id, user_id, serve) {
 		(error, _result) => {
 			if (error) {
 				console.error('Update views falied', error)
-				return serve (true, "update convo views failed");
+				return serve (true, "update convo views failed")
 			}
 		}
-	);
+	)
 
 	const convo = {}
 	convo.vote = 0
@@ -94,43 +94,43 @@ function getConvo (convo_id, user_id, serve) {
 	const query = "SELECT convo.*, users.username " +  
 	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
 	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
-	"WHERE convo.convo_id=$1";
+	"WHERE convo.convo_id=$1"
 	db.query(
 		query,
 		[convo_id],
 		(error, results) => {
 			if (error) {
 				console.error('Select convo failed', error)
-				return serve (true, "select convo failed");
+				return serve (true, "select convo failed")
 			} else if (results.rowCount < 1){
 				console.error('Select convo failed')
 				return serve (true, "select convo failed")
 			}
 			convo.convo_id = convo_id
-			convo.title = results.rows[0]['title'];
-			convo.contributorCount = results.rows[0]['contributors'];
-			convo.postCount = results.rows[0]['posts'];
-			convo.views = results.rows[0]['views'];
-			convo.votes = results.rows[0]['votes'];
-			convo.commentCount = results.rows[0]['comments'];
+			convo.title = results.rows[0]['title']
+			convo.contributorCount = results.rows[0]['contributors']
+			convo.postCount = results.rows[0]['posts']
+			convo.views = results.rows[0]['views']
+			convo.votes = results.rows[0]['votes']
+			convo.commentCount = results.rows[0]['comments']
 
-			let i;
-			convo.contributors = [];
+			let i
+			convo.contributors = []
 			for(i = 0; i < results.rowCount; i++){
-				convo.contributors.push(results.rows[i]['username']);
+				convo.contributors.push(results.rows[i]['username'])
 			}
 
 			//get posts
 			getPosts(convo_id, (err, res) => {
 				if (err) {
-					return serve (err, res);
+					return serve (err, res)
 				}
-				convo.posts = res;
+				convo.posts = res
 
-				return serve (null, convo);
-			});
+				return serve (null, convo)
+			})
 		}
-	);
+	)
 }
 
 function vote(convo_id, user_id, vote, serve){

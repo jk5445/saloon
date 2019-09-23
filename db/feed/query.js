@@ -1,4 +1,4 @@
-const db = require('../queries');
+const db = require('../queries')
 const {getContributors} = require('../contributor/query')
 
 module.exports = {

@@ -40,7 +40,7 @@ module.exports = app => {
 
     /*
     app.get('/api/v1/feed/:tag', (request, response) => {
-        let batch = request.body.batch || 1;
+        let batch = request.body.batch || 1
 
         if(!validate.isInt(batch + '')){
             batch = 1

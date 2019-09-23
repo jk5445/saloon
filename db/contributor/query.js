@@ -73,18 +73,18 @@ function getContributors (convo_id, serve) {
 		(error, results) => {
 			if (error) {
 				console.error('Error selecting contributor', error)
-				return serve (true, "Error selecting contributor");
+				return serve (true, "Error selecting contributor")
 			} else if (results.rowCount < 1){
-				return serve (true, "Invalid conversation");
+				return serve (true, "Invalid conversation")
 			}
 
 			let i = 0
-			let contributors = [];
+			let contributors = []
 			for(i; i < results.rowCount; i++) {
-				const contributorName = results.rows[i]['username'];
+				const contributorName = results.rows[i]['username']
 				contributors.push(contributorName)
 			}
-			return serve (null, contributors);
+			return serve (null, contributors)
 		}
 	)
 }

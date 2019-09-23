@@ -1,11 +1,11 @@
-const db = require('../queries');
-const user = require('../user/query');
+const db = require('../queries')
+const user = require('../user/query')
 
 module.exports = { 
 	createPost, 
 	getPosts, 
 	authorize
-};
+}
 
 //a user needs to be part of a conversation to post
 //this check should happen at server level
@@ -57,54 +57,54 @@ function getPosts (convo_id, serve) {
 		(error, results) => {
 			if (error) {
 				console.error('select post failed', error)
-				return serve (true, "select post failed");
+				return serve (true, "select post failed")
 			} else if (results.rowCount < 1) {
 				console.error('Conversation has no posts', 'Contrived Error')
-				return serve (true, "convo has no post");
+				return serve (true, "convo has no post")
 			}
 
-			let posts = [];
-			let i;
-			let count = 0;
+			let posts = []
+			let i
+			let count = 0
 			for (i = 0; i < results.rowCount; i++) {
-				const post = {};
-				post.post = results.rows[i]['post'];
-				post.created_at = results.rows[i]['created_at'];
+				const post = {}
+				post.post = results.rows[i]['post']
+				post.created_at = results.rows[i]['created_at']
 
 				const user_id = results.rows[i]['contributor_id']
 				user.getUserName(user_id, (err, res) => {
 					if(err){
-						return serve (err, res);
+						return serve (err, res)
 					}
 
-					post.contributor = res;
-					posts.push(post);
+					post.contributor = res
+					posts.push(post)
 					count++;
 					
 					if(count >= results.rowCount){
-						return serve (null, posts);
+						return serve (null, posts)
 					}
-				});
+				})
 			}
 		}
-	);
+	)
 }
 
 //call directly from server
 function authorize (convo_id, contributor_id, serve) {
 	//verify
-	let authorized = false; 
+	let authorized = false 
 	db.query(
 		'SELECT 1 FROM contributor WHERE convo_id = $1 AND contributor_id = $2',
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
 				console.error('Select contributor failed', error)
-				return serve (true, "select contributor failed");
+				return serve (true, "select contributor failed")
 			}
 			//true if record is found
-			authorized = (results.rowCount > 0);
-			return serve (null, authorized);
+			authorized = (results.rowCount > 0)
+			return serve (null, authorized)
 		}
-	);
+	)
 }

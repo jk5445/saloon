@@ -1,2 +1,2 @@
-const db = require('../queries');
+const db = require('../queries')
 
