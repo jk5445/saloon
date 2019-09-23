@@ -23,7 +23,7 @@ app.use((request, response, next) => {
   let pass = body.password
   if(pass)
     body.password = true
-  console.log("before cors: ", body)
+  console.log("body: ", body)
   body.password = pass
   next()
 })
