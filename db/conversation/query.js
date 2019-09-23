@@ -1,5 +1,6 @@
 const db = require('../queries')
 const {getPosts, createPost} = require('../post/query')
+const moment = require('moment')
 
 module.exports = {
 	createConvo, 
@@ -113,6 +114,9 @@ function getConvo (convo_id, user_id, serve) {
 			convo.views = results.rows[0]['views']
 			convo.votes = results.rows[0]['votes']
 			convo.commentCount = results.rows[0]['comments']
+			
+			const last_post = moment.utc(results[0]['last_post_at'], moment.ISO_8601)
+			convo.age = moment.utc(last_post).fromNow()
 
 			let i
 			convo.contributors = []
