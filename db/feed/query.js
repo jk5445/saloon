@@ -160,13 +160,13 @@ function stringifyContributors (contributors){
     let str = ""
 
     if(count == 1)
-        str = response[0]
+        str = contributors[0]
     else if(count == 2)
-        str = `${response[0]} and ${response[1]}`
+        str = `${contributors[0]} and ${contributors[1]}`
     else if(count == 3)
-        str = `${response[0]}, ${response[1]}, and ${response[2]}`
+        str = `${contributors[0]}, ${contributors[1]}, and ${contributors[2]}`
     else if(count > 3)
-        str = `${response[0]}, ${response[1]}, and ${convo.contributors - 2} others`
+        str = `${contributors[0]}, ${contributors[1]}, and ${count - 2} others`
     
     return str
 }
