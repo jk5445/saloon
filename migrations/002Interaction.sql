@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS convo_vote (
-    vote_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+    vote_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     convo_id UUID REFERENCES convo (convo_id) NOT NULL,
     user_id UUID REFERENCES users (user_id) NOT NULL,
     vote integer NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS convo_vote (
 );
 
 CREATE TABLE IF NOT EXISTS comment (
-    comment_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+    comment_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     comment text NOT NULL,
     convo_id UUID REFERENCES convo (convo_id) NOT NULL,
     user_id UUID REFERENCES users (user_id) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS comment (
 );
 
 CREATE TABLE IF NOT EXISTS comment_vote (
-    vote_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+    vote_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     comment_id UUID REFERENCES comment (comment_id) NOT NULL,
     user_id UUID REFERENCES users (user_id) NOT NULL,
     vote integer NOT NULL,

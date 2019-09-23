@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS users (
-	user_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+	user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	username varchar(20) NOT NULL UNIQUE,
 	first_name varchar(20),
 	last_name varchar(20),
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS convo (
-	convo_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+	convo_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	title varchar(150),
 	contributors integer DEFAULT 0,
 	posts integer DEFAULT 0,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS convo (
 );
 
 CREATE TABLE IF NOT EXISTS post (
-	post_id UUID DEFAULT uuid_generate_v1() PRIMARY KEY,
+	post_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 	convo_id UUID REFERENCES convo (convo_id) NOT NULL,
 	post text NOT NULL,
 	contributor_id UUID REFERENCES users (user_id) NOT NULL,
