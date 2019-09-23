@@ -70,6 +70,9 @@ function getPosts (convo_id, serve) {
 				const post = {}
 				post.post = results.rows[i]['post']
 				post.created_at = results.rows[i]['created_at']
+				
+				const post_at = moment.utc(results[i]['created_at'], moment.ISO_8601)
+				convo.age = moment.utc(post_at).fromNow()
 
 				const user_id = results.rows[i]['contributor_id']
 				user.getUserName(user_id, (err, res) => {
