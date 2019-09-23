@@ -32,7 +32,7 @@ module.exports = app => {
 
         db.getFeedByUser(username, batch, (err, res) => {
             if(err) {
-                return response.status(400).send(res)
+                return response.status(400).send({ message: res })
             }
             return response.json(res)
         })
