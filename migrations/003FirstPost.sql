@@ -1,0 +1,1 @@
+ALTER TABLE convo ADD first_post UUID REFERENCES post (post_id) DEFAULT NULL;
