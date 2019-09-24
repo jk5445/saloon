@@ -60,7 +60,7 @@ function processFeed(error, results, batch, serve){
     for(i; i < limit; i++){
         let convo = results.rows[i]
         const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
-        convo.age = moment.utc(last_post).fromNow()
+        convo.age = moment(last_post).fromNow()
 
         getContributors(convo.convo_id, (error, response) => {
             if(error){
