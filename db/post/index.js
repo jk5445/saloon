@@ -15,25 +15,25 @@ module.exports = app => {
         const post = request.body.post
 
         if(!convo_id || !validate.isUUID(convo_id, 4)) {
-            return response.status(400).send({ message: "Invalid convo_id" })
+            return response.status(400).json({ message: "Invalid convo_id" })
         }
         if(!post || !validate.isLength(post, {min: 10, max: undefined})) {
-            return response.status(400).send({ message: "Post must contain at least 10 characters" })
+            return response.status(400).json({ message: "Post must contain at least 10 characters" })
         }
         
         db.authorize(convo_id, user_id, (err, res) => {
             if (err) {
-                return response.status(400).send({ message: "Post failed" })
+                return response.status(400).json({ message: "Post failed" })
             }
             else if(res) {
                 db.createPost(convo_id, user_id, post, (err, _res) => {
                     if(err) {
-                        return response.status(400).send({ message: "Post failed" })
+                        return response.status(400).json({ message: "Post failed" })
                     }
-                    return response.status(201).end("Post failed")
+                    return response.status(201).json({ message: "Post success" })
                 })
             } else {
-                return response.status(400).end("Post failed")
+                return response.status(400).json({ message: "Post failed" })
             }
         })
     })
