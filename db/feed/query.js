@@ -79,16 +79,14 @@ function processFeed(error, results, batch, serve){
 
 function stringifyContributors (contributors){
     const count = contributors.length
-    let str = ""
+    let contr = []
 
-    if(count == 1)
-        str = contributors[0]
-    else if(count == 2)
-        str = `${contributors[0]} and ${contributors[1]}`
-    else if(count == 3)
-        str = `${contributors[0]}, ${contributors[1]}, and ${contributors[2]}`
-    else if(count > 3)
-        str = `${contributors[0]}, ${contributors[1]}, and ${count - 2} others`
+    let i
+    for(i = 0; i < 3; i++)
+        contr[i] = contributors[i]
+    contr[3] = null
+    if(count > 3)
+        contr[3] = `${count - 2} others`
     
-    return str
+    return contr
 }
