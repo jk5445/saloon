@@ -1,5 +1,6 @@
 const db = require('../queries')
 const user = require('../user/query')
+const moment = require('moment')
 
 module.exports = { 
 	createPost, 
