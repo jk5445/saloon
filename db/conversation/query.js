@@ -116,7 +116,7 @@ function getConvo (convo_id, user_id, serve) {
 			convo.commentCount = results.rows[0]['comments']
 			
 			const last_post = moment.utc(results[0]['last_post_at'], moment.ISO_8601)
-			convo.age = moment.utc(last_post).fromNow()
+			convo.age = moment(last_post).fromNow()
 
 			let i
 			convo.contributors = []
