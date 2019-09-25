@@ -57,6 +57,7 @@ function createConvo (user_id, title, post, serve) {
 							client.query('COMMIT', err => {
 								if(abort(err)) return serve (true, "Error commiting transaction")
 								done()
+								convo.isContributor = true
 								return serve (null, convo)
 							})
 						})
@@ -98,7 +99,7 @@ function getConvo (convo_id, user_id, serve) {
 		)
 	}
 
-	const query = "SELECT convo.*, users.username " +  
+	const query = "SELECT convo.*, users.username, users.user_id " +  
 	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
 	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
 	"WHERE convo.convo_id=$1"
@@ -128,6 +129,8 @@ function getConvo (convo_id, user_id, serve) {
 			convo.contributors = []
 			for(i = 0; i < results.rowCount; i++){
 				convo.contributors.push(results.rows[i]['username'])
+				if(user_id && user_id === results.rows[i]['user_id'])
+					convo.isContributor = true
 			}
 
 			//get posts
