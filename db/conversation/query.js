@@ -45,14 +45,20 @@ function createConvo (user_id, title, post, serve) {
 				client.query(query, [convo.convo_id, user_id], error => {
 					if(abort(error)) return serve (true, "Error inserting contributor")
 
-					query = 'INSERT INTO post (convo_id, contributor_id, post) VALUES ($1, $2, $3)'
-					client.query(query, [convo.convo_id, user_id, post], error => {
+					query = 'INSERT INTO post (convo_id, contributor_id, post) VALUES ($1, $2, $3) RETURNING post_id'
+					client.query(query, [convo.convo_id, user_id, post], (error, results) => {
 						if(abort(error)) return serve (true, "Error inserting post")
+						else if(results.rowCount < 1) return serve(true, 'Error inserting post')
 
-						client.query('COMMIT', err => {
-							if(abort(err)) return serve (true, "Error commiting transaction")
-							done()
-							return serve (null, convo)
+						query = 'UPDATE convo SET first_post = $2 WHERE convo_id = $1'
+						client.query(query, [convo.convo_id, results.rows[0]['post_id']], error => {
+							if(abort(error)) return serve (true, 'Error setting firstPost')
+
+							client.query('COMMIT', err => {
+								if(abort(err)) return serve (true, "Error commiting transaction")
+								done()
+								return serve (null, convo)
+							})
 						})
 					})
 				})
