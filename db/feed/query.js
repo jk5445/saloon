@@ -10,14 +10,17 @@ module.exports = {
 }
 
 function getFeed(batch, serve) {
-    const query = "SELECT * FROM convo ORDER BY votes DESC"
+    const query = 'SELECT convo.*, post.post FROM convo ' + 
+    'INNER JOIN post ON post.post_id = convo.first_post ' +
+    'ORDER BY votes DESC'
     db.query(query, [], (error, results) => {
         processFeed(error, results, batch, serve)
     })
 }
 
 function getFeedByUser(username, batch, serve) {
-    const query = 'SELECT convo.* FROM users ' +
+    const query = 'SELECT convo.*, post.post FROM users ' +
+    'INNER JOIN post ON post.post_id = convo.first_post ' +
     'INNER JOIN contributor ON users.user_id = contributor.contributor_id ' + 
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
     'WHERE users.username = $1 AND contributor.accepted_at IS NOT NULL ' +
@@ -28,7 +31,8 @@ function getFeedByUser(username, batch, serve) {
 }
 
 function getFeedById(user_id, batch, serve) {
-    const query = 'SELECT convo.* FROM contributor ' + 
+    const query = 'SELECT convo.*, post.post FROM contributor ' + 
+    'INNER JOIN post ON post.post_id = convo.first_post ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
@@ -61,6 +65,8 @@ function processFeed(error, results, batch, serve){
         let convo = results.rows[i]
         const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
         convo.age = moment(last_post).fromNow()
+        convo.last_post_at = undefined
+        convo.first_post = undefined
 
         getContributors(convo.convo_id, (error, response) => {
             if(error){
