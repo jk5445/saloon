@@ -33,7 +33,7 @@ module.exports = app => {
                     return response.status(201).json({ message: "Post success" })
                 })
             } else {
-                return response.status(400).json({ message: "Post failed" })
+                return response.status(401).json({ message: "Not authorized to post to this conversation" })
             }
         })
     })
