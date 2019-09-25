@@ -10,8 +10,8 @@ module.exports = {
 }
 
 function getFeed(batch, serve) {
-    const query = 'SELECT convo.*, post.post FROM convo ' + 
-    'INNER JOIN post ON post.post_id = convo.first_post ' +
+    const query = 'SELECT convo.*, post.post, post.post_id FROM convo ' + 
+    'INNER JOIN post ON convo.first_post = post.post_id ' +
     'ORDER BY votes DESC'
     db.query(query, [], (error, results) => {
         processFeed(error, results, batch, serve)
@@ -19,10 +19,10 @@ function getFeed(batch, serve) {
 }
 
 function getFeedByUser(username, batch, serve) {
-    const query = 'SELECT convo.*, post.post FROM users ' +
-    'INNER JOIN post ON post.post_id = convo.first_post ' +
+    const query = 'SELECT convo.*, post.post, post.post_id FROM users ' +
     'INNER JOIN contributor ON users.user_id = contributor.contributor_id ' + 
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
+    'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE users.username = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
     db.query(query, [username], (error, results) => {
@@ -31,9 +31,9 @@ function getFeedByUser(username, batch, serve) {
 }
 
 function getFeedById(user_id, batch, serve) {
-    const query = 'SELECT convo.*, post.post FROM contributor ' + 
-    'INNER JOIN post ON post.post_id = convo.first_post ' +
-    'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
+    const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
+    'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
+    'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
     db.query(query, [user_id], (error, results) => {
@@ -67,6 +67,7 @@ function processFeed(error, results, batch, serve){
         convo.age = moment(last_post).fromNow()
         convo.last_post_at = undefined
         convo.first_post = undefined
+        convo.post_id = undefined
 
         getContributors(convo.convo_id, (error, response) => {
             if(error){
