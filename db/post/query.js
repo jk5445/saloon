@@ -53,7 +53,10 @@ function createPost (convo_id, contributor_id, post, serve) {
 }
 
 function getPosts (convo_id, serve) {
-	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1 ORDER BY created_at DESC',
+	const query = 'SELECT post.post, post.created_at, users.username FROM post ' +
+				'INNER JOIN users ON post.contributor_id = users.user_id ' +
+				'WHERE convo_id = $1 ORDER BY created_at DESC'
+	db.query(query,
 		[convo_id],
 		(error, results) => {
 			if (error) {
@@ -66,30 +69,18 @@ function getPosts (convo_id, serve) {
 
 			let posts = []
 			let i
-			let count = 0
 			for (i = 0; i < results.rowCount; i++) {
 				const post = {}
 				post.post = results.rows[i]['post']
 				post.created_at = results.rows[i]['created_at']
+				post.contributor = results.rows[i]['username']
 				
 				const post_at = moment.utc(results.rows[i]['created_at'], moment.ISO_8601)
 				post.age = moment(post_at).fromNow()
 
-				const user_id = results.rows[i]['contributor_id']
-				user.getUserName(user_id, (err, res) => {
-					if(err){
-						return serve (err, res)
-					}
-
-					post.contributor = res
-					posts.push(post)
-					count++;
-					
-					if(count >= results.rowCount){
-						return serve (null, posts)
-					}
-				})
+				posts.push(post)
 			}
+			return serve (null, posts)
 		}
 	)
 }
