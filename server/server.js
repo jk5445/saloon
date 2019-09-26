@@ -33,16 +33,11 @@ app.use(cors({
   allowedHeaders: ['Authorization', 'Content-Type']
 }))
 
-app.use(express.static(path.join(__dirname, '../react-build')));
-
 app.get('/api/v1', (_request, response) => {
   response.json({ info: 'Saloon API V1' })
 })
 
-app.get('/client', (_request, response) => {
-  response.sendFile(path.join(__dirname, '../react-build/index.html'))
-})
-
+app.use(express.static(path.join(__dirname, '../react-build')));
 //Users
 user(app)
 //Conversations
@@ -56,6 +51,7 @@ feed(app)
 //Comments
 //comment(app)
 
+app.get('*', (_req, res) => res.sendFile(path.join(__dirname, '../react-build/index.html')))
 
 app.listen(port, hostname, () => {
     // eslint-disable-next-line no-console
