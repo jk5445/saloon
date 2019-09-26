@@ -55,7 +55,7 @@ function createPost (convo_id, contributor_id, post, serve) {
 function getPosts (convo_id, serve) {
 	const query = 'SELECT post.post, post.created_at, users.username FROM post ' +
 				'INNER JOIN users ON post.contributor_id = users.user_id ' +
-				'WHERE convo_id = $1 ORDER BY created_at DESC'
+				'WHERE convo_id = $1 ORDER BY created_at ASC'
 	db.query(query,
 		[convo_id],
 		(error, results) => {
