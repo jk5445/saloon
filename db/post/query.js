@@ -53,7 +53,7 @@ function createPost (convo_id, contributor_id, post, serve) {
 }
 
 function getPosts (convo_id, serve) {
-	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1 ORDER BY created_at ASC',
+	db.query('SELECT post, contributor_id, created_at FROM post WHERE convo_id = $1 ORDER BY created_at DESC',
 		[convo_id],
 		(error, results) => {
 			if (error) {
