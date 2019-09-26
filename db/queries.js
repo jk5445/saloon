@@ -12,7 +12,7 @@ const pool = new Pool({
   password: process.env.DB_PASS,
   port: process.env.DB_PORT
   */
-  connectionString: process.env.DATABASE_URL,
+  connectionString: "postgres://palkrehiiurigq:4c032c2d34213b26ecd2fbf0a4a3a8a0b4c1321f765ca7a7e9fcb12b206a1668@ec2-174-129-227-80.compute-1.amazonaws.com:5432/dd1r3e1124fevi",
   ssl: true
 })
 
