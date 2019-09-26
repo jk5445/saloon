@@ -89,11 +89,11 @@ function stringifyContributors (contributors){
     let contr = []
 
     let i
-    for(i = 0; i < 3; i++)
+    for(i = 0; i < count && i < 3; i++)
         contr[i] = contributors[i]
-    contr[3] = null
+
     if(count > 3)
-        contr[3] = `${count - 2} others`
+        contr.push(`${count - 2} others`)
     
     return contr
 }
