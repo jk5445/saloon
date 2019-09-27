@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server/server",
     "test": "node tests",
-    "build": "echo BANG"
+    "build": "sh build.sh"
   },
   "author": "",
   "license": "ISC",
