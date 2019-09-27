@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "node server/server",
-    "test": "node tests"
+    "test": "node tests",
+    "build": "echo BANG"
   },
   "author": "",
   "license": "ISC",
