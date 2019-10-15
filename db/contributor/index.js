@@ -44,9 +44,9 @@ module.exports = app => {
     })
 
     //accept invite
-    app.put('/api/v1/contributor/:convo_id', authenticate, (request, response) => {
+    app.put('/api/v1/contributor', authenticate, (request, response) => {
         const contributor_id = request.body.user_id
-        const convo_id = request.params.convo_id
+        const convo_id = request.body.convo_id
 
         if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).send({ message: "Invalid convo_id" })
