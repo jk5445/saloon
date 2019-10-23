@@ -4,8 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node server/server",
-    "test": "node tests",
-    "build": "sh build.sh"
+    "test": "node tests"
   },
   "author": "",
   "license": "ISC",
