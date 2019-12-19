@@ -1,5 +1,7 @@
 # README
 
+An <a href="https://agile-tor-73556.herokuapp.com/home">alpha</a> version is live!
+
 The back end stack is PostgreSQL and Node.js with express.
 
 Any updates to the API should be accompanied by an appropiate update to [API.md][1]
