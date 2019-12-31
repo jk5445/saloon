@@ -30,12 +30,12 @@ module.exports = app => {
             if (err) {
                 return response.status(401).send({ message: "Authorization failed" })
             }
-            if(res) {
+            else if (res) {
                 db.inviteContributor(convo_id, contributor_username, inviter_id, (err, _res) => {
                     if(err) {
                         return response.status(400).send({ message: "Invite failed" })
                     }
-                    return response.status(201).end()
+                    return response.status(201).send({ message: "Invite success"})
                 })
             } else {
                 return response.status(401).end("Authorization failed")
