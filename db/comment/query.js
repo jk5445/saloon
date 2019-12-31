@@ -17,7 +17,9 @@ function createComment(convo_id, user_id, comment, serve){
 }
 
 function getComment(convo_id, serve){
-    const query = 'SELECT * FROM comment WHERE convo_id = $1 ORDER BY comment_at DESC'
+    const query = "SELECT comment.*, users.username FROM comment " + 
+    "INNER JOIN users ON comment.user_id = users.user_id " + 
+    "WHERE comment.convo_id = $1 ORDER BY comment_at DESC"
     db.query(query, [convo_id], (error, results) => {
         if(error) {
             console.error('Select comments failed', error)
@@ -26,7 +28,7 @@ function getComment(convo_id, serve){
             return serve(true, 'No comments or non-existent convo_id')
         }
 
-        return serve(null, { comments: results })
+        return serve(null, { comments: results.rows })
     })
 }
 
