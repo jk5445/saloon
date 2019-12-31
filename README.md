@@ -1,14 +1,16 @@
 # README
 
+An <a href="https://agile-tor-73556.herokuapp.com/home">alpha</a> version is live!
+
 The back end stack is PostgreSQL and Node.js with express.
 
 Any updates to the API should be accompanied by an appropiate update to [API.md][1]
 
-Before server is run database must be built.
+Before server is deployed, the database must be built.
 
 See [Migrations.md][2] in migrations to set up database
 
-Store database credentials and access information in a .env file in repositories root directory.
+Store database credentials and access information in a .env file in repo's root directory.
 
 <!-- links -->
 [1]: server/API.md
