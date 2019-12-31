@@ -6,12 +6,44 @@ module.exports = {
 }
 
 function createComment(convo_id, user_id, comment, serve){
-    const query = 'INSERT INTO comment (convo_id, user_id, comment) VALUES ($1, $2, $3)'
-    db.query(query, [convo_id, user_id, comment], (error, results) => {
-        if(error) {
-            console.error('Insert comment failed', error)
-		    return serve (true, 'Insert comment failed')
+    db.getClient((error, client, done) => {
+		if(error) {
+			console.error('Error connecting client', error)
+			return serve (true, "Error connecting client")
+		}
+
+		const abort = err => {
+			if(err){
+				console.error("Error in transaction", err)
+				client.query('ROLLBACK', err => {
+					if(err){
+						console.error("Error rolling back client", err)
+					}
+					done()
+				})
+			}
+			return !!err
         }
+
+		client.query('BEGIN', err => {
+			if(abort(err)) return serve (true, "Error beginning transaction")
+
+            let query = 'INSERT INTO comment (convo_id, user_id, comment) VALUES ($1, $2, $3)'
+            client.query(query, [convo_id, user_id, comment], err => {
+                if(abort(err)) {
+                    console.error('Insert comment failed', error)
+		            return serve (true, 'Insert comment failed')
+                }
+                
+                query = 'UPDATE convo SET comments=comments + 1 WHERE convo_id=$1'
+                client.query(query, [convo_id], err => {
+                    if(abort(err)) {
+                        console.error('Update comment count failed', error)
+                        return serve (true, 'Update comment count failed')
+                    }
+                })
+            })
+        })
         return serve(null, "success")
     })
 }
