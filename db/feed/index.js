@@ -9,6 +9,8 @@ module.exports = app => {
         if(!validate.isInt(batch + '')){
             batch = 1
         }
+        if (batch < 0) batch = 0 - batch
+        else if (batch == 0) batch = 1
 
         db.getFeed(batch, (err, res) => {
             if(err) {
