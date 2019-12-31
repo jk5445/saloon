@@ -45,13 +45,11 @@ function createComment(convo_id, user_id, comment, serve){
                     client.query('COMMIT', err => {
                         if(abort(err)) return serve (true, "Error commiting transaction")
                         done()
-                        convo.isContributor = true
-                        return serve (null, convo)
+                        return serve(null, "success")
                     })
                 })
             })
         })
-        return serve(null, "success")
     })
 }
 
