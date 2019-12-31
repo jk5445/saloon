@@ -35,7 +35,7 @@ modules.exports = app => {
             return response.status(400).send({ message: "Comment must contain at least 1 characters" })
         }
 
-        db.createComment(convo_id, comment, (err, res) => {
+        db.createComment(convo_id, user_id, comment, (err, res) => {
             if(err)
                 return response.status(400).json({ message: res })
             return response.status(201).json({ message: res })
