@@ -34,13 +34,20 @@ function createComment(convo_id, user_id, comment, serve){
                     console.error('Insert comment failed', error)
 		            return serve (true, 'Insert comment failed')
                 }
-                
+
                 query = 'UPDATE convo SET comments=comments + 1 WHERE convo_id=$1'
                 client.query(query, [convo_id], err => {
                     if(abort(err)) {
                         console.error('Update comment count failed', error)
                         return serve (true, 'Update comment count failed')
                     }
+
+                    client.query('COMMIT', err => {
+                        if(abort(err)) return serve (true, "Error commiting transaction")
+                        done()
+                        convo.isContributor = true
+                        return serve (null, convo)
+                    })
                 })
             })
         })
