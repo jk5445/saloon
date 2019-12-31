@@ -25,7 +25,7 @@ module.exports = app => {
     app.post('/api/v1/comment/:convo_id', authenticate, (request, response) => {
         const user_id = request.body.user_id
         const convo_id = request.params.convo_id
-        const comment = response.body.comment
+        const comment = request.body.comment
 
         if(!validate.isUUID(convo_id, 4)) {
             return response.status(400).json({ message: "Invalid convo_id" })
