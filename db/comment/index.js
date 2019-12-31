@@ -4,7 +4,7 @@ const validate = require('validator')
 
 //COMMENTS
 
-modules.exports = app => {
+module.exports = app => {
     //get comments
     app.get('/api/v1/comment/:convo_id', (request, response) => {
         const convo_id = request.params.convo_id
