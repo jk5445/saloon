@@ -197,7 +197,7 @@ function vote(convo_id, user_id, vote, serve){
 						client.query('COMMIT', err => {
 							if(abort(err)) return serve (true, "Error commiting transaction")
 							done()
-							return serve (null, true)
+							return serve (null, "Voted")
 						})
 					})
 				})

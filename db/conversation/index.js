@@ -57,7 +57,7 @@ module.exports = app => {
             return response.status(400).send({ message: 'Invalid vote' })
         }
         if(!validate.isUUID(convo_id, 4)) {
-            return response.status(400).send({ message: "Invalid convo_id" })
+            return response.status(400).send({ message: 'Invalid convo_id' })
         }
 
         db.vote(convo_id, user_id, vote, (err, res) => {
@@ -65,7 +65,7 @@ module.exports = app => {
                 return response.status(400).send({ message: 'Query failed' })
             }
 
-            return response.status(200).send(res)
+            return response.status(200).send({ message: res })
         })
     })
 }
