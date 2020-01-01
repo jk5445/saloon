@@ -93,11 +93,11 @@ function getUserById (user_id, serve) {
 			}
 			user.posts = results.rows
 
-			getFeedById(user_id, 1, (error, results) => {
+			getFeedById(user_id, 1, 100, (error, results) => {
 				if(error) return serve (error, user)
 				user.convos = results.convos
 				
-				getInviteFeed(user_id, 1, (error, results) => {
+				getInviteFeed(user_id, 1, 100, (error, results) => {
 					if(error) return serve (error, user)
 					user.invites = results.convos
 	

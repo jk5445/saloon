@@ -10,16 +10,16 @@ module.exports = {
     //getFeedByTag
 }
 
-function getFeed(batch, serve) {
+function getFeed(batch, size, serve) {
     const query = 'SELECT convo.*, post.post, post.post_id FROM convo ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'ORDER BY votes DESC'
     db.query(query, [], (error, results) => {
-        processFeed(error, results, batch, serve)
+        processFeed(error, results, batch, size, serve)
     })
 }
 
-function getFeedByUser(username, batch, serve) {
+function getFeedByUser(username, batch, size, serve) {
     const query = 'SELECT convo.*, post.post, post.post_id FROM users ' +
     'INNER JOIN contributor ON users.user_id = contributor.contributor_id ' + 
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
@@ -27,29 +27,29 @@ function getFeedByUser(username, batch, serve) {
     'WHERE users.username = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
     db.query(query, [username], (error, results) => {
-        processFeed(error, results, batch, serve)
+        processFeed(error, results, batch, size, serve)
     })
 }
 
-function getFeedById(user_id, batch, serve) {
+function getFeedById(user_id, batch, size, serve) {
     const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
     db.query(query, [user_id], (error, results) => {
-        processFeed(error, results, batch, serve)
+        processFeed(error, results, batch, size, serve)
     })
 }
 
-function getInviteFeed(user_id, batch, serve) {
+function getInviteFeed(user_id, batch, size, serve) {
     const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NULL ' +
     'ORDER BY votes DESC '
     db.query(query, [user_id], (error, results) => {
-        processFeed(error, results, batch, serve)
+        processFeed(error, results, batch, size, serve)
     })
 }
 
@@ -59,7 +59,7 @@ function getFeedByTag(tag, batch, serve){
 }
 */
 
-function processFeed(error, results, batch, serve){
+function processFeed(error, results, batch, size, serve){
     if(error){
         console.error('select feed failed', error)
         return serve (true, "select feed failed")
@@ -70,9 +70,9 @@ function processFeed(error, results, batch, serve){
 
     convos = []
 
-    let i = (batch - 1) * 10
+    let i = (batch - 1) * size
     let count = i
-    const limit = (results.rowCount < i + 10) ? results.rowCount : 10 + i
+    const limit = (results.rowCount < i + size) ? results.rowCount : size + i
     for(i; i < limit; i++){
         let convo = results.rows[i]
         const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
