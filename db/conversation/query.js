@@ -131,11 +131,12 @@ function getConvo (convo_id, user_id, serve) {
 			for(i = 0; i < results.rowCount; i++){
 				if(results.rows[i]['accepted_at'] == null)
 					convo.invites.push(results.rows[i]['username'])
-				else
+				else {
 					convo.contributors.push(results.rows[i]['username'])
-
-				if(user_id && user_id === results.rows[i]['user_id'])
-					convo.isContributor = true
+					
+					if(user_id && user_id === results.rows[i]['user_id'])
+						convo.isContributor = true
+				}
 			}
 
 			//get posts
