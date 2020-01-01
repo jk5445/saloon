@@ -99,7 +99,7 @@ function getConvo (convo_id, user_id, serve) {
 		)
 	}
 
-	const query = "SELECT convo.*, users.username, users.user_id " +  
+	const query = "SELECT convo.*, users.username, users.user_id, contributor.accepted_at " +  
 	"FROM convo INNER JOIN contributor ON convo.convo_id=contributor.convo_id " +
 	"INNER JOIN users ON contributor.contributor_id=users.user_id " + 
 	"WHERE convo.convo_id=$1"
@@ -114,7 +114,7 @@ function getConvo (convo_id, user_id, serve) {
 				console.error('Select convo failed')
 				return serve (true, "select convo failed")
 			}
-			convo.convo_id = convo_id
+			convo.convo_id = results.rows[0]['convo_id']
 			convo.title = results.rows[0]['title']
 			convo.contributorCount = results.rows[0]['contributors']
 			convo.postCount = results.rows[0]['posts']
@@ -127,8 +127,13 @@ function getConvo (convo_id, user_id, serve) {
 
 			let i
 			convo.contributors = []
+			convo.invites = []
 			for(i = 0; i < results.rowCount; i++){
-				convo.contributors.push(results.rows[i]['username'])
+				if(results.rows[i]['accepted_at'] == null)
+					convo.invites.push(results.rows[i]['username'])
+				else
+					convo.contributors.push(results.rows[i]['username'])
+
 				if(user_id && user_id === results.rows[i]['user_id'])
 					convo.isContributor = true
 			}
