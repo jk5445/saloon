@@ -56,7 +56,7 @@ module.exports = app => {
             if(err) {
                 return response.status(400).send({ message: "Accept invite failed" })
             }
-            return response.status(200).end()
+            return response.status(200).send({ message: res})
         })
     })
 }

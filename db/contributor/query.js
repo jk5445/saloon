@@ -15,48 +15,55 @@ function inviteContributor (convo_id, contributor_username, inviter_id, serve) {
 		(error, _results) => {
 	  		if(error){
 				console.error('Invite Failed', error)
-	  			return serve (true, "invite failed")
+	  			return serve (true, "Invite failed, user may already be invited")
 			}
-			return serve (null, true)
+			return serve (null, "Contributor Invited")
 		}
 	)
 }
 
 function acceptInvite (convo_id, contributor_id, serve) {
-	db.getClient((err, client, done) => {
-		if(err) {
-			console.error('Error connecting client', error)
-			return serve (true, 'Error connecting client')
-		}
-
-		const abort = err => {
-			if(err){
-				console.error("Error in transaction", err)
-				client.query('ROLLBACK', err => {
-					if(err){
-						console.error("Error rolling back client", err)
-					}
-					done()
-				})
-			}
-			return !!err
-		}
-
-		client.query('BEGIN', err => {
-			if(abort(err)) return serve (true, "Error beginning transaction")
+	let query = 'SELECT accepted_at FROM contributor WHERE convo_id=$1 AND contributor_id=$2'
+	db.query(query, [convo_id, contributor_id], (error, results) => {
+		if(error) return serve (true, "Error checking invite")
+		if(results.rowCount < 1) return serve (true, "Contributor not invited")
+		else if (results.rows[0]['accepted_at'] != null) return serve (null, "Already accepted")
 		
-			let query = 'UPDATE contributor SET accepted_at = NOW() WHERE convo_id = $1 AND contributor_id = $2'
-			client.query(query, [convo_id, contributor_id], (error, _results) => {
-				if(abort(error)) return serve (true, "Error accepting invite")
-				
-				query = 'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1'
-				client.query(query, [convo_id], (error, _results) => {
-					if(abort(error)) return serve (true, "Error updating contributor count")
+		db.getClient((err, client, done) => {
+			if(err) {
+				console.error('Error connecting client', error)
+				return serve (true, 'Error connecting client')
+			}
 
-					client.query('COMMIT', err => {
-						if(abort(err)) return serve (true, "Error commiting transaction")
+			const abort = err => {
+				if(err){
+					console.error("Error in transaction", err)
+					client.query('ROLLBACK', err => {
+						if(err){
+							console.error("Error rolling back client", err)
+						}
 						done()
-						return serve (null, true)
+					})
+				}
+				return !!err
+			}
+
+			client.query('BEGIN', err => {
+				if(abort(err)) return serve (true, "Error beginning transaction")
+
+				query = 'UPDATE contributor SET accepted_at = NOW() WHERE convo_id=$1 AND contributor_id=$2'
+				client.query(query, [convo_id, contributor_id], (error, _results) => {
+					if(abort(error)) return serve (true, "Error accepting invite")
+					
+					query = 'UPDATE convo SET contributors = contributors + 1 WHERE convo_id = $1'
+					client.query(query, [convo_id], (error, _results) => {
+						if(abort(error)) return serve (true, "Error updating contributor count")
+
+						client.query('COMMIT', err => {
+							if(abort(err)) return serve (true, "Error commiting transaction")
+							done()
+							return serve (null, "Accepted!")
+						})
 					})
 				})
 			})
@@ -78,12 +85,7 @@ function getContributors (convo_id, serve) {
 				return serve (true, "Invalid conversation")
 			}
 
-			let i = 0
-			let contributors = []
-			for(i; i < results.rowCount; i++) {
-				const contributorName = results.rows[i]['username']
-				contributors.push(contributorName)
-			}
+			let contributors = results.rows.map(x => x['username'])
 			return serve (null, contributors)
 		}
 	)
