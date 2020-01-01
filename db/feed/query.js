@@ -68,7 +68,6 @@ function processFeed(error, results, batch, serve){
         convo.last_post_at = undefined
         convo.first_post = undefined
         convo.post_id = undefined
-        convo.index = i
 
         getContributors(convo.convo_id, (error, response) => {
             if(error){
@@ -80,9 +79,14 @@ function processFeed(error, results, batch, serve){
             count++;
             if(count >= limit){
                 convos.sort((a, b) => {
-                    if (a.index > b.index) return 1
-                    else if (b.index > a.index) return -1
-                    else return 0
+                    if (a.votes > b.votes) return -1
+                    else if (b.votes > a.votes) return 1
+                    else if (a.comments > b.comments) return -1
+                    else if (b.comments > a.comments) return 1
+                    else if (a.views > b.views) return -1
+                    else if (b.views > a.views) return 1
+                    else if (a.title > b.title) return -1
+                    else return 1
                 })
                 return serve (null, {convos: convos})
             }
