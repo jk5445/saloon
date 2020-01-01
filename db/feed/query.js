@@ -5,7 +5,8 @@ const moment = require('moment')
 module.exports = {
     getFeed,
     getFeedByUser,
-    getFeedById
+    getFeedById,
+    getInviteFeed
     //getFeedByTag
 }
 
@@ -36,6 +37,17 @@ function getFeedById(user_id, batch, serve) {
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NOT NULL ' +
     'ORDER BY votes DESC'
+    db.query(query, [user_id], (error, results) => {
+        processFeed(error, results, batch, serve)
+    })
+}
+
+function getInviteFeed(user_id, batch, serve) {
+    const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
+    'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
+    'INNER JOIN post ON convo.first_post = post.post_id ' +
+    'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NULL ' +
+    'ORDER BY votes DESC '
     db.query(query, [user_id], (error, results) => {
         processFeed(error, results, batch, serve)
     })
