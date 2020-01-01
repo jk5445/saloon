@@ -90,7 +90,7 @@ function authorize (convo_id, contributor_id, serve) {
 	//verify
 	let authorized = false 
 	db.query(
-		'SELECT 1 FROM contributor WHERE convo_id = $1 AND contributor_id = $2',
+		'SELECT 1 FROM contributor WHERE convo_id = $1 AND contributor_id = $2 and accepted_at IS NOT NULL',
 		[convo_id, contributor_id],
 		(error, results) => {
 			if(error) {
