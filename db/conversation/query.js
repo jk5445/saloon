@@ -127,10 +127,10 @@ function getConvo (convo_id, user_id, serve) {
 
 			let i
 			convo.contributors = []
-			convo.invites = []
+			convo.invited = []
 			for(i = 0; i < results.rowCount; i++){
 				if(results.rows[i]['accepted_at'] == null)
-					convo.invites.push(results.rows[i]['username'])
+					convo.invited.push(results.rows[i]['username'])
 				else {
 					convo.contributors.push(results.rows[i]['username'])
 					
