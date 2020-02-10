@@ -1,4 +1,5 @@
 const db = require('../queries')
+const moment = require('moment')
 
 module.exports = {
     createComment,
@@ -64,6 +65,14 @@ function getComment(convo_id, serve){
         } else if(results.rowCount < 1) {
             return serve(true, 'No comments or non-existent convo_id')
         }
+
+        //convert comment_at time to "x units ago" format
+        results.rows.map(
+            row => {
+                const mt = moment.utc(row.comment_at, moment.ISO_8601)
+                row.age = moment(mt).fromNow()
+            }
+        )
 
         return serve(null, { comments: results.rows })
     })
