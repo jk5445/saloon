@@ -43,7 +43,7 @@ function getFeedById(user_id, batch, size, serve) {
 }
 
 function getInviteFeed(user_id, batch, size, serve) {
-    const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
+    const query = 'SELECT convo.*, post.post, post.post_id, contributor.invited_at FROM contributor ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NULL ' +
@@ -75,8 +75,14 @@ function processFeed(error, results, batch, size, serve){
     const limit = (results.rowCount < i + size) ? results.rowCount : size + i
     for(i; i < limit; i++){
         let convo = results.rows[i]
-        const last_post = moment.utc(convo.last_post_at, moment.ISO_8601)
-        convo.age = moment(last_post).fromNow()
+
+        if(convo.invited_at != undefined) {
+            const mt = moment.utc(convo.invited_at, moment.ISO_8601)
+            convo.invited_at = moment(mt).fromNow()
+        }
+
+        const mt = moment.utc(convo.last_post_at, moment.ISO_8601)
+        convo.age = moment(mt).fromNow()
         convo.last_post_at = undefined
         convo.first_post = undefined
         convo.post_id = undefined
