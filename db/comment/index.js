@@ -16,7 +16,7 @@ module.exports = app => {
         db.getComment(convo_id, (err, res) => {
             if(err)
                 return response.status(400).json({ message: res })
-            return response.status(200).json({message: res})
+            return response.status(200).json(res)
         })
     })
 
