@@ -4,14 +4,13 @@ An <a href="https://agile-tor-73556.herokuapp.com/home">alpha</a> version is liv
 
 The back end stack is PostgreSQL and Node.js with express.
 
-Any updates to the API should be accompanied by an appropiate update to [API.md][1]
+API documentation and testing on Postman. Invite to Postman collab on request.
 
 Before server is deployed, the database must be built.
 
-See [Migrations.md][2] in migrations to set up database
+See [Migrations.md][1] in migrations to set up database
 
 Store database credentials and access information in a .env file in repo's root directory.
 
 <!-- links -->
-[1]: server/API.md
-[2]: migrations/Migrations.md
+[1]: migrations/Migrations.md
