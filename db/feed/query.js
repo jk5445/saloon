@@ -68,12 +68,10 @@ function processFeed(error, results, batch, size, serve){
         return serve (true, 'Feed is empty')
     }
 
-    convos = []
+    var convos = []
+    var count = 0;
 
-    let i = (batch - 1) * size
-    let count = i
-    const limit = (results.rowCount < i + size) ? results.rowCount : size + i
-    for(i; i < limit; i++){
+    for(var i = 0; i < results.rowCount; i++){
         let convo = results.rows[i]
 
         if(convo.invited_at != undefined) {
@@ -95,7 +93,7 @@ function processFeed(error, results, batch, size, serve){
             convo.contributorCount = response.length
             convos.push(convo)
             count++;
-            if(count >= limit){
+            if(count >= results.rowCount){
                 convos.sort((a, b) => {
                     if (a.votes > b.votes) return -1
                     else if (b.votes > a.votes) return 1
