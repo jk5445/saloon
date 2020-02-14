@@ -71,7 +71,7 @@ function processFeed(error, results, batch, size, serve){
     let convos = []
     let count = 0;
 
-    for(var i = 0; i < results.rowCount; i++){
+    for(let i = 0; i < results.rowCount; i++){
         let convo = results.rows[i]
 
         if(convo.invited_at != undefined) {
