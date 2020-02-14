@@ -21,11 +21,7 @@ app.use(bodyParser.urlencoded({extended: true,}))
 
 app.use((request, response, next) => {
   let body = request.body
-  let pass = body.password
-  if(pass)
-    body.password = true
-  console.log("body: ", body)
-  body.password = pass
+
   next()
 })
 
