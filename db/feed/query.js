@@ -68,8 +68,8 @@ function processFeed(error, results, batch, size, serve){
         return serve (true, 'Feed is empty')
     }
 
-    var convos = []
-    var count = 0;
+    let convos = []
+    let count = 0;
 
     for(var i = 0; i < results.rowCount; i++){
         let convo = results.rows[i]
