@@ -25,19 +25,16 @@ function createToken (user_id, response){
 function authenticate (request, response, next){
 	const token = request.headers['authorization']
 
-	if(!isJWT(token)){
-		return response.sendStatus(401)
-	}
+	if (token == undefined)
+		return response.status(401).send({message: "token is undefined"})
+	if(!isJWT(token))
+		return response.status(401).send({message: "token is not JWT"})
 
 	request.body.user_id = null
-	if (token == undefined){
-		return response.sendStatus(401)
-	}
 
 	jwt.verify(token, secret, {issuer: issuer}, (err, decoded) => {
-		if (err){
-			return response.sendStatus(401)
-		}
+		if (err)
+			return response.status(401).send({message: "token is invalid"})
 
 		request.body.user_id = decoded['sub']
 		return next()
