@@ -89,19 +89,16 @@ function getUserById (user_id, serve) {
 			if(error) {
 				console.error('Select posts failed', error)
 				return serve (null, user)
-			} else if (results.rowCount < 1) {
-				return serve (null, user)
+			} else if (results.rowCount > 0) {
+				user.posts = results.rows.map(
+					row => {
+						const mt = moment.utc(row.created_at, moment.ISO_8601)
+						row.age = moment(mt).fromNow()
+						return row
+					}
+				)
 			}
-			user.posts = results.rows.map(
-            	row => {
-                	const mt = moment.utc(row.created_at, moment.ISO_8601)
-                	row.age = moment(mt).fromNow()
-                	return row
-            	}
-        	)
 
-			user.convos = null
-			user.invites = null
 			getFeedById(user_id, 1, 100, (error, results) => {
 				if(!error) user.convos = results.convos
 				
