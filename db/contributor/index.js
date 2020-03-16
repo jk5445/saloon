@@ -26,13 +26,13 @@ module.exports = app => {
         else
             contributors = [contributor]
 
-        for(let i = contributors.length - 1; i >= 0; i--) {
+        /*for(let i = contributors.length - 1; i >= 0; i--) {
             let c = contributors[i]
             if(!c || !validate.isAlphanumeric(c)){
                 invalid.push(c)
                 contributors.splice(i, 1)
             }
-        }
+        }*/
 
         if(contributors.length === 0)
             return response.status(400).send({message: "All usernames are invalid" })
@@ -41,29 +41,31 @@ module.exports = app => {
         
         let count = 0
         db.authorize(convo_id, inviter_id, (err, res) => {
-            if (err) {
+            if (err)
                 return response.status(401).send({ message: "Authorization failed" })
-            }
+
             else if (res) {
-                for(c in contributors) {
-                    db.inviteContributor(convo_id, contributors, inviter_id, (err, _res) => {
-                        if(err) {
+                for(const c of contributors) {
+                    db.inviteContributor(convo_id, c, inviter_id, (err, _res) => {
+                        if(err)
                             invalid.push(c)
-                        }
+                        
                         count++
                         if(count >= contributors.length) {
-                            if (invalid.length > 0)
-                                return response.status(400).send({
-                                    message: "Failed to invite contributors",
+                            if (invalid.length === 0)
+                                return response.status(201).send({ message: "Invite success" })
+                            else if (invalid.length < contributors.length)
+                                return response.status(201).send({
+                                    message: "Failed to invite some contributors",
                                     failures: invalid
                                 })
-                            return response.status(201).send({ message: "Invite success" })
+                            else
+                                return response.status(400).send({ message: "Invite Failed" })
                         }
                     })
                 }
-            } else {
+            } else
                 return response.status(401).send({ message: "Authorization failed" })
-            }
         })
     })
 
@@ -72,14 +74,13 @@ module.exports = app => {
         const contributor_id = request.body.user_id
         const convo_id = request.body.convo_id
 
-        if(!validate.isUUID(convo_id, 4)) {
+        if(!validate.isUUID(convo_id, 4))
             return response.status(400).send({ message: "Invalid convo_id" })
-        }
 
         db.acceptInvite(convo_id, contributor_id, (err, res) => {
-            if(err) {
+            if(err)
                 return response.status(400).send({ message: "Accept invite failed" })
-            }
+            
             return response.status(200).send({ message: res})
         })
     })
