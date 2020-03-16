@@ -42,7 +42,7 @@ function createUser (userName, firstName, lastName, email, password, serve) {
 //issue token
 function logIn (email, password, serve) {
 	db.query(
-		'SELECT user_id, password_hash FROM users WHERE email=$1',
+		'SELECT user_id, password_hash, username, first_name, last_name FROM users WHERE email=$1',
 		[email],
 		(error, results) => {
 			if (error) {
@@ -59,8 +59,12 @@ function logIn (email, password, serve) {
 					console.error('bcrypt compare failed', err)
 					return serve (true, "bcrypt compare failed")
 				} else if (res) {
-					const user_id = results.rows[0]['user_id']
-					return serve (null, user_id)
+					const user = {}
+					user.id = results.rows[0]['user_id']
+					user.username = results.rows[0]['username']
+					user.first_name = results.rows[0]['first_name']
+					user.last_name = results.rows[0]['last_name']
+					return serve (null, user)
 				} else {
 					return serve(true, "Incorrect password")
 				}
