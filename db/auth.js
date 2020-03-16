@@ -12,13 +12,13 @@ module.exports = {
 }
 
 
-function createToken (user_id, response){
+function createToken (user_id, serve){
 	jwt.sign({sub: user_id, iss: issuer}, secret, {expiresIn: expIn}, (err, token) => {
 		if(err){
 			console.log("Error creating token", err)
-			return response.status(400).send({ message: "Error creating token" })
+			return serve (true, "Error creating token")
 		}
-		return response.send({ token })
+		return serve (null, token)
 	})
 }
 

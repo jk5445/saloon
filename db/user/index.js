@@ -36,7 +36,12 @@ module.exports = app => {
                 return response.status(400).send({ message: 'Query failed' })
             }
 
-            createToken(user_id, response)
+            createToken(user_id, (err, res) => {
+                if(!err)
+                    response.status(201).send({ token: res })
+                else 
+                    response.status(400).send({ message: res })
+            })
         }) 
     })
 
@@ -53,15 +58,23 @@ module.exports = app => {
             return response.status(400).send({ message: "Password length must be between 8 and 50 characters" })
         }
 
-        db.logIn(email, password, (err, user_id) => {
+        db.logIn(email, password, (err, user) => {
             if(err) {
-                return response.status(400).send({ message: "Log in failed" })
-            }
-
-            if(user_id){
-                createToken(user_id, response)
+                response.status(400).send({ message: "Log in failed" })
+            } else if (user) {
+                createToken(user.id, (err, res) => {
+                    if(!err)
+                        response.status(200).send({
+                            token: res,
+                            username: user.username,
+                            first: user.first_name,
+                            last: user.last_name
+                        })
+                    else
+                        response.status(400).send({ message: res })
+                })
             } else {
-                response.status(400)
+                response.status(400).end()
             }
         })
     })
