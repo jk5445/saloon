@@ -78,6 +78,16 @@ module.exports = app => {
         })
     })
 
+    app.get('/api/v1/user/liked', authenticate, (request, response) => {
+        const user_id = request.body.user_id
+        db.getLiked(user_id, (err, res) => {
+            if(err) {
+                return response.status(400).send( {message: "Get liked failed"})
+            }
+            return response.status(200).json(res)
+        })
+    })
+
     //edit user
     //auth
     /*

@@ -6,7 +6,8 @@ module.exports = {
     getFeed,
     getFeedByUser,
     getFeedById,
-    getInviteFeed
+    getInviteFeed,
+    getFeedByLike
     //getFeedByTag
 }
 
@@ -48,6 +49,18 @@ function getInviteFeed(user_id, batch, size, serve) {
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'WHERE contributor.contributor_id = $1 AND contributor.accepted_at IS NULL ' +
     'ORDER BY votes DESC '
+    db.query(query, [user_id], (error, results) => {
+        processFeed(error, results, batch, size, serve)
+    })
+}
+
+function getFeedByLike(user_id, batch, size, serve) {
+    const query = 'SELECT convo.*, post.post, post.post_id FROM convo ' + 
+    'INNER JOIN post ON convo.first_post = post.post_id ' +
+    'INNER JOIN convo_vote ON convo.convo_id = convo_vote.convo_id ' +
+    'INNER JOIN users ON convo_vote.user_id = users.user_id ' +
+    'WHERE users.user_id = $1 AND convo_vote.vote = 1 ' +
+    'ORDER BY convo_vote.vote_at DESC'
     db.query(query, [user_id], (error, results) => {
         processFeed(error, results, batch, size, serve)
     })

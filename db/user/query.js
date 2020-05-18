@@ -1,5 +1,5 @@
 const db = require('../queries')
-const {getFeedById, getInviteFeed} = require('../feed/query')
+const {getFeedById, getInviteFeed, getFeedByLike} = require('../feed/query')
 const moment = require('moment')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
@@ -8,7 +8,8 @@ module.exports = {
 	createUser, 
 	logIn, 
 	getUserName,
-	getUserById
+	getUserById,
+	getLiked
 }
 
 function createUser (userName, firstName, lastName, email, password, serve) {
@@ -111,6 +112,12 @@ function getUserById (user_id, serve) {
 		})
   	  }
   	)
+}
+
+function getLiked(user_id, serve) {
+	getFeedByLike(user_id, 1, 100, (error, results) => {
+		return serve(error, results)
+	})
 }
 
 function getUserName (user_id, serve) {
