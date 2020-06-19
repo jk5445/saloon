@@ -14,7 +14,7 @@ module.exports = app => {
         const email = request.body.email
         const password = request.body.password
 
-        if(!username || !validate.isLength(username, {min: 5, max: 20})){
+        if(!username || !validate.isLength(username, {min: 2, max: 20})){
             return response.status(400).send({ message: "Username must contain at least 5 characters and at most 20 characters" })
         }
         if(!first_name || !validate.isLength(first_name, {min: 2, max: 20})){
