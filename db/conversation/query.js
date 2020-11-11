@@ -128,6 +128,7 @@ function getConvo (convo_id, user_id, serve) {
 			let i
 			convo.contributors = []
 			convo.invited = []
+			//{ username: results.rows[i]['username'], user_id: results.rows[i]['user_id'] }
 			for(i = 0; i < results.rowCount; i++){
 				if(results.rows[i]['accepted_at'] == null)
 					convo.invited.push(results.rows[i]['username'])
