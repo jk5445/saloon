@@ -72,7 +72,7 @@ function logIn (email, password, serve) {
 
 //TODO: add user history to user object
 function getUserById (user_id, serve) {
-	let query = "SELECT username, first_name, last_name, email FROM users " +
+	let query = "SELECT username, first_name, last_name FROM users " +
 		"WHERE user_id = $1"
 	db.query(query, [user_id], (error, results) => {
 		if (error) {
