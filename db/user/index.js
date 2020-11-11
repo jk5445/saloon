@@ -78,6 +78,18 @@ module.exports = app => {
         })
     })
 
+    //get user info
+    //non-authenticated
+    app.get('/api/v1/profile/:user_id', (request, response) => {
+        const user_id = request.params.user_id
+        db.getUserById(user_id, (err, res) => {
+            if(err){
+                return response.status(400).send({ message: "Get profile failed" })
+            }
+            return response.status(200).json(res)
+        })
+    })
+
     app.get('/api/v1/user/liked', authenticate, (request, response) => {
         const user_id = request.body.user_id
         db.getLiked(user_id, (err, res) => {
