@@ -1,7 +1,5 @@
 # README
 
-A <a href="https://www.saloon.org">beta</a> is live!
-
 The back end stack is PostgreSQL and Node.js with express.
 
 API documentation and testing on Postman. Invite to Postman collab on request.
