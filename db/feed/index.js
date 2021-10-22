@@ -4,7 +4,6 @@ const validate = require('validator')
 module.exports = app => {
     //get feed
     app.get('/api/v1/feed', (request, response) => {
-        console.log("Get Feed called")
 
         let batch = request.body.batch || 1
         const size = 50
@@ -15,7 +14,6 @@ module.exports = app => {
         if (batch < 0) batch = 0 - batch
         else if (batch == 0) batch = 1
 
-        console.log("Requesting feed from database")
         db.getFeed(batch, size, (err, res) => {
             if(err) {
                 return response.status(400).send({ message: res })

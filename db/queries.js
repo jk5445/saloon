@@ -11,7 +11,6 @@ const pool = new Pool({
 
 module.exports = {
 	query: (text, params, callback) => {
-    console.log("DB.query called: ", text)
 		return pool.query(text, params, callback)
   },
 
