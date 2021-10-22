@@ -34,6 +34,7 @@ app.get('/api/v1', (_request, response) => {
 })
 
 app.use(express.static(path.join(__dirname, '../react-build')));
+console.log("Build served: Launching API")
 //Users
 user(app)
 //Conversations
