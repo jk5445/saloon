@@ -14,6 +14,7 @@ console.log(pool)
 
 module.exports = {
 	query: (text, params, callback) => {
+    console.log(pool)
     console.log("DB.query called: ", text)
 		return pool.query(text, params, callback)
   },
