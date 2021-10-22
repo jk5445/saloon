@@ -12,6 +12,7 @@ module.exports = {
 }
 
 function getFeed(batch, size, serve) {
+    console.log("getFeed called")
     const query = 'SELECT convo.*, post.post, post.post_id FROM convo ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'ORDER BY votes DESC'
@@ -21,6 +22,7 @@ function getFeed(batch, size, serve) {
 }
 
 function getFeedByUser(username, batch, size, serve) {
+    console.log("getFeedByUser called")
     const query = 'SELECT convo.*, post.post, post.post_id FROM users ' +
     'INNER JOIN contributor ON users.user_id = contributor.contributor_id ' + 
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' +
@@ -33,6 +35,7 @@ function getFeedByUser(username, batch, size, serve) {
 }
 
 function getFeedById(user_id, batch, size, serve) {
+    console.log("getFeedById called")
     const query = 'SELECT convo.*, post.post, post.post_id FROM contributor ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
@@ -44,6 +47,7 @@ function getFeedById(user_id, batch, size, serve) {
 }
 
 function getInviteFeed(user_id, batch, size, serve) {
+    console.log("getInviteFeed called")
     const query = 'SELECT convo.*, post.post, post.post_id, contributor.invited_at FROM contributor ' +
     'INNER JOIN convo ON convo.convo_id = contributor.convo_id ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
@@ -55,6 +59,7 @@ function getInviteFeed(user_id, batch, size, serve) {
 }
 
 function getFeedByLike(user_id, batch, size, serve) {
+    console.log("getFeedByLike called")
     const query = 'SELECT convo.*, post.post, post.post_id FROM convo ' + 
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'INNER JOIN convo_vote ON convo.convo_id = convo_vote.convo_id ' +
@@ -73,6 +78,7 @@ function getFeedByTag(tag, batch, serve){
 */
 
 function processFeed(error, results, batch, size, serve){
+    console.log("processFeed called")
     if(error){
         console.error('select feed failed', error)
         return serve (true, "select feed failed")
