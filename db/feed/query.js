@@ -17,6 +17,7 @@ function getFeed(batch, size, serve) {
     'INNER JOIN post ON convo.first_post = post.post_id ' +
     'ORDER BY votes DESC'
     db.query(query, [], (error, results) => {
+        console.log("DB responded")
         processFeed(error, results, batch, size, serve)
     })
 }
